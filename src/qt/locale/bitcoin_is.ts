@@ -62,8 +62,8 @@
         <translation type="unfinished">Færslugildi sem þiggja til sín</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Þetta eru Bitcoin færslugildin sem senda greiðslur. Skoðið ævinlega vel upphæðina og færslugildin sem þiggja greiðslur áður en mynt er send.</translation>
+        <source>These are your L15 addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Þetta eru L15 færslugildin sem senda greiðslur. Skoðið ævinlega vel upphæðina og færslugildin sem þiggja greiðslur áður en mynt er send.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -254,7 +254,7 @@
     </message>
     </context>
 <context>
-    <name>BitcoinGUI</name>
+    <name>L15GUI</name>
     <message>
         <source>&amp;Overview</source>
         <translation>&amp;Yfirlit</translation>
@@ -305,8 +305,8 @@
         <translation type="unfinished">Slökkt á netumferð.</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation>Senda mynt í Bitcoin færslugildi</translation>
+        <source>Send coins to a L15 address</source>
+        <translation>Senda mynt í L15 færslugildi</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -337,12 +337,12 @@
         <translation>Dulkóða einkalyklana sem tilheyra veskinu þínu</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation>Kvitta undir skilaboð með Bitcoin færslugildunum þínum til að sanna að þú eigir þau</translation>
+        <source>Sign messages with your L15 addresses to prove you own them</source>
+        <translation>Kvitta undir skilaboð með L15 færslugildunum þínum til að sanna að þú eigir þau</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation>Yfirfara skilaboð til að tryggja að kvittað hafi verið fyrir þau með tilteknum Bitcoin færslugildum</translation>
+        <source>Verify messages to ensure they were signed with specified L15 addresses</source>
+        <translation>Yfirfara skilaboð til að tryggja að kvittað hafi verið fyrir þau með tilteknum L15 færslugildum</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -361,8 +361,8 @@
         <translation>Tólaborð flipa</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Óska eftir greiðslum (býr til QR kóða og bitcoin: URI)</translation>
+        <source>Request payments (generates QR codes and l15: URIs)</source>
+        <translation type="unfinished">Óska eftir greiðslum (býr til QR kóða og l15: URI)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -412,15 +412,15 @@
         <translation>Uppfært</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Sýna %1 hjálparskilaboðin til að fá lista yfir valkosti Bitcoin aðgerðir í skipanalínu</translation>
+        <source>Show the %1 help message to get a list with possible L15 command-line options</source>
+        <translation type="unfinished">Sýna %1 hjálparskilaboðin til að fá lista yfir valkosti L15 aðgerðir í skipanalínu</translation>
     </message>
     <message>
         <source>%1 client</source>
         <translation type="unfinished">%1 biðlarar</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to L15 network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
             <numerusform />
@@ -591,8 +591,8 @@
         <translation type="unfinished">Breyta sendingarfærslugildi</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Færslugildið sem slegið var inn "%1" er ekki leyfilegt Bitcoin færslugildi.</translation>
+        <source>The entered address "%1" is not a valid L15 address.</source>
+        <translation type="unfinished">Færslugildið sem slegið var inn "%1" er ekki leyfilegt L15 færslugildi.</translation>
     </message>
     </context>
 <context>
@@ -857,7 +857,7 @@
     </message>
     </context>
 <context>
-    <name>bitcoin-core</name>
+    <name>l15</name>
     <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation type="unfinished">Villa við lestur %s! Allir lyklar fóru inn á réttan hátt, en færslugögn eða færslugildi gætu verið röng eða horfin.</translation>
