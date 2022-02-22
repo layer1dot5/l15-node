@@ -47,7 +47,7 @@ bool CAddrInfo::IsTerrible(int64_t nNow) const
     if (nLastTry && nLastTry >= nNow - 60) // never remove things tried in the last minute
         return false;
 
-    if (nTime > nNow + 10 * 60) // came in a flying DeLorean
+    if (nTime > nNow + 60) // came in a flying DeLorean
         return true;
 
     if (nTime == 0 || nNow - nTime > ADDRMAN_HORIZON_DAYS * 24 * 60 * 60) // not seen in recent history
