@@ -1,5 +1,14 @@
 *.tar.gz
-
+.idea
+src/qt/l15-qt
+src/l15d
+src/l15
+src/l15-cli
+src/l15-gui
+src/l15-wallet
+src/l15-util
+src/l15-tx
+src/l15-node
 *.exe
 *.pdb
 src/bitcoin
