@@ -103,7 +103,7 @@ public:
         pchMessageStart[1] = 0xeb;
         pchMessageStart[2] = 0xab;
         pchMessageStart[3] = 0x01;
-        nDefaultPort = 8335;
+        nDefaultPort = 7335;
         nPruneAfterHeight = 100000;
         m_assumed_blockchain_size = 420;
         m_assumed_chain_state_size = 6;
@@ -221,7 +221,7 @@ public:
         pchMessageStart[1] = 0x11;
         pchMessageStart[2] = 0x09;
         pchMessageStart[3] = 0x07;
-        nDefaultPort = 18333;
+        nDefaultPort = 17333;
         nPruneAfterHeight = 1;
         m_assumed_blockchain_size = 40;
         m_assumed_chain_state_size = 2;
@@ -236,6 +236,7 @@ public:
         // nodes with support for servicebits filtering should be at the top
         vSeeds.emplace_back("127.0.0.1");
         vSeeds.emplace_back("192.168.1.183");
+        vSeeds.emplace_back("192.168.1.135");
     /*    vSeeds.emplace_back("testnet-seed.bitcoin.jonasschnelli.ch");
         vSeeds.emplace_back("seed.tbtc.petertodd.org");
         vSeeds.emplace_back("seed.testnet.bitcoin.sprovoost.nl");
@@ -359,7 +360,7 @@ public:
         uint256 hash = h.GetHash();
         memcpy(pchMessageStart, hash.begin(), 4);
 
-        nDefaultPort = 38335;
+        nDefaultPort = 37335;
         nPruneAfterHeight = 1000;
 
         genesis = CreateGenesisBlock(1645220524, 6205387, 0x1e0377ae, 1, 50 * COIN);
@@ -428,7 +429,7 @@ public:
         pchMessageStart[1] = 0xff;
         pchMessageStart[2] = 0xa7;
         pchMessageStart[3] = 0x0b;
-        nDefaultPort = 18444;
+        nDefaultPort = 17444;
         nPruneAfterHeight = args.GetBoolArg("-fastprune", false) ? 100 : 1000;
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
