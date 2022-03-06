@@ -1,5 +1,5 @@
-#L15
-___
+# L15
+
 
 Layer One dot Five (L15) is an open source, decentralized protocol over Bitcoin that utilizes a construct similar to the Lightning channel as a limited trustless lockbox for a sidechain.
 It can also be described as a sidechain-enabled iteration of the Lightning Network,
