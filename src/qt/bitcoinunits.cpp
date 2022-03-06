@@ -19,9 +19,9 @@ BitcoinUnits::BitcoinUnits(QObject *parent):
 QList<BitcoinUnits::Unit> BitcoinUnits::availableUnits()
 {
     QList<BitcoinUnits::Unit> unitlist;
-    unitlist.append(BTC);
-    unitlist.append(mBTC);
-    unitlist.append(uBTC);
+    unitlist.append(L15SR);
+    unitlist.append(mL15SR);
+    unitlist.append(uL15SR);
     unitlist.append(SAT);
     return unitlist;
 }
@@ -30,9 +30,9 @@ bool BitcoinUnits::valid(int unit)
 {
     switch(unit)
     {
-    case BTC:
-    case mBTC:
-    case uBTC:
+    case L15SR:
+    case mL15SR:
+    case uL15SR:
     case SAT:
         return true;
     default:
@@ -44,9 +44,9 @@ QString BitcoinUnits::longName(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("BTC");
-    case mBTC: return QString("mBTC");
-    case uBTC: return QString::fromUtf8("µBTC (bits)");
+    case L15SR: return QString("L15SR");
+    case mL15SR: return QString("mL15SR");
+    case uL15SR: return QString::fromUtf8("µL15SR (bits)");
     case SAT: return QString("Satoshi (sat)");
     default: return QString("???");
     }
@@ -56,7 +56,7 @@ QString BitcoinUnits::shortName(int unit)
 {
     switch(unit)
     {
-    case uBTC: return QString::fromUtf8("bits");
+    case uL15SR: return QString::fromUtf8("bits");
     case SAT: return QString("sat");
     default: return longName(unit);
     }
@@ -66,9 +66,9 @@ QString BitcoinUnits::description(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("Bitcoins");
-    case mBTC: return QString("Milli-Bitcoins (1 / 1" THIN_SP_UTF8 "000)");
-    case uBTC: return QString("Micro-Bitcoins (bits) (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    case L15SR: return QString("L15's");
+    case mL15SR: return QString("Milli-l15's (1 / 1" THIN_SP_UTF8 "000)");
+    case uL15SR: return QString("Micro-l15's (bits) (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
     case SAT: return QString("Satoshi (sat) (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
     default: return QString("???");
     }
@@ -78,9 +78,9 @@ qint64 BitcoinUnits::factor(int unit)
 {
     switch(unit)
     {
-    case BTC: return 100000000;
-    case mBTC: return 100000;
-    case uBTC: return 100;
+    case L15SR: return 100000000;
+    case mL15SR: return 100000;
+    case uL15SR: return 100;
     case SAT: return 1;
     default: return 100000000;
     }
@@ -90,9 +90,9 @@ int BitcoinUnits::decimals(int unit)
 {
     switch(unit)
     {
-    case BTC: return 8;
-    case mBTC: return 5;
-    case uBTC: return 2;
+    case L15SR: return 8;
+    case mL15SR: return 5;
+    case uL15SR: return 2;
     case SAT: return 0;
     default: return 0;
     }
