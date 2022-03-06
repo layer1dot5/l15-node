@@ -11,17 +11,7 @@ src/l15-tx
 src/l15-node
 *.exe
 *.pdb
-src/bitcoin
-src/bitcoind
-src/bitcoin-cli
-src/bitcoin-gui
-src/bitcoin-node
-src/bitcoin-tx
-src/bitcoin-util
-src/bitcoin-wallet
 src/test/fuzz/fuzz
-src/test/test_bitcoin
-src/qt/test/test_bitcoin-qt
 
 # autoreconf
 Makefile.in
@@ -60,12 +50,6 @@ src/qt/forms/ui_*.h
 
 src/qt/test/moc*.cpp
 
-src/qt/bitcoin-qt.config
-src/qt/bitcoin-qt.creator
-src/qt/bitcoin-qt.creator.user
-src/qt/bitcoin-qt.files
-src/qt/bitcoin-qt.includes
-
 .deps
 .dirstamp
 .libs
@@ -102,8 +86,6 @@ src/qt/bitcoin-qt.includes
 *.qm
 Makefile
 !depends/Makefile
-src/qt/bitcoin-qt
-Bitcoin-Qt.app
 background.tiff*
 
 # Qt Creator
@@ -111,7 +93,6 @@ Makefile.am.user
 
 # Unit-tests
 Makefile.test
-bitcoin-qt_test
 
 # Resources cpp
 qrc_*.cpp
