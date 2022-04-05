@@ -47,7 +47,7 @@ QString BitcoinUnits::longName(int unit)
     case L15SR: return QString("L15SR");
     case mL15SR: return QString("mL15SR");
     case uL15SR: return QString::fromUtf8("µL15SR (bits)");
-    case SAT: return QString("Satoshi (sat)");
+    case SAT: return QString("L15SR'Nano (l15nan)");
     default: return QString("???");
     }
 }
@@ -57,7 +57,7 @@ QString BitcoinUnits::shortName(int unit)
     switch(unit)
     {
     case uL15SR: return QString::fromUtf8("bits");
-    case SAT: return QString("sat");
+    case SAT: return QString("l15nan");
     default: return longName(unit);
     }
 }
@@ -69,7 +69,7 @@ QString BitcoinUnits::description(int unit)
     case L15SR: return QString("L15's");
     case mL15SR: return QString("Milli-l15's (1 / 1" THIN_SP_UTF8 "000)");
     case uL15SR: return QString("Micro-l15's (bits) (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-    case SAT: return QString("Satoshi (sat) (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    case SAT: return QString("Nano-L15's (l15nan) (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
     default: return QString("???");
     }
 }
