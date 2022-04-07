@@ -22,6 +22,7 @@ src/bitcoin-wallet
 src/test/fuzz/fuzz
 src/test/test_bitcoin
 src/qt/test/test_bitcoin-qt
+src/qt/test/test_l15-qt
 
 # autoreconf
 Makefile.in
