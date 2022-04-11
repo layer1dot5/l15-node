@@ -75,7 +75,7 @@ public:
         consensus.MinBIP9WarningHeight = 1; // segwit activation height + miner confirmation window
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = 10 * 60;
+        consensus.nPowTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = true; //false
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1815; // 90% of 2016
@@ -105,8 +105,8 @@ public:
         pchMessageStart[3] = 0x01;
         nDefaultPort = 7335;
         nPruneAfterHeight = 100000;
-        m_assumed_blockchain_size = 420;
-        m_assumed_chain_state_size = 6;
+        m_assumed_blockchain_size = 1;
+        m_assumed_chain_state_size = 1;
         //                            time:        nonce:       bits:
         genesis = CreateGenesisBlock(1645220520, 228887178, 0x1d00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -198,7 +198,7 @@ public:
         consensus.MinBIP9WarningHeight = 1; // segwit activation height + miner confirmation window
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = 10 * 60;
+        consensus.nPowTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 2; // 1512; // 75% for testchains
@@ -223,8 +223,8 @@ public:
         pchMessageStart[3] = 0x07;
         nDefaultPort = 17333;
         nPruneAfterHeight = 1;
-        m_assumed_blockchain_size = 40;
-        m_assumed_chain_state_size = 2;
+        m_assumed_blockchain_size = 1;
+        m_assumed_chain_state_size = 1;
 
         genesis = CreateGenesisBlock(1645220522, 218767647, 0x1d00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -336,7 +336,7 @@ public:
         consensus.CSVHeight = 1;
         consensus.SegwitHeight = 1;
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = 10 * 60;
+        consensus.nPowTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1815; // 90% of 2016
@@ -406,7 +406,7 @@ public:
         consensus.MinBIP9WarningHeight = 0;
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = 10 * 60;
+        consensus.nPowTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
