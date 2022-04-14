@@ -64,7 +64,7 @@ public:
         strNetworkID = CBaseChainParams::MAIN;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
-        consensus.nSubsidyHalvingInterval = 210000;
+        consensus.nSubsidyHalvingInterval = 0x40000; // ~ 182
         consensus.BIP16Exception = uint256S("0x000000004626f342dd0ddcd286dbfe43061d25054f486d6106180c9c26120219");
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256S("0x000000004626f342dd0ddcd286dbfe43061d25054f486d6106180c9c26120219");
@@ -74,12 +74,12 @@ public:
         consensus.SegwitHeight = 1; // 0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893
         consensus.MinBIP9WarningHeight = 1; // segwit activation height + miner confirmation window
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
+        consensus.nPowTargetTimespan = 7 * 24 * 60 * 60; // one weeks
         consensus.nPowTargetSpacing = 60;
-        consensus.fPowAllowMinDifficultyBlocks = true; //false
+        consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 18150; // 90% of 20160
-        consensus.nMinerConfirmationWindow = 20160; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 9072; // 90% of 20160
+        consensus.nMinerConfirmationWindow = 10080; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
@@ -108,7 +108,7 @@ public:
         m_assumed_blockchain_size = 1;
         m_assumed_chain_state_size = 1;
         //                            time:        nonce:       bits:
-        genesis = CreateGenesisBlock(1645220520, 228887178, 0x1d00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1645220520, 228887178, 0x1d00ffff, 1, 4096 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x000000004626f342dd0ddcd286dbfe43061d25054f486d6106180c9c26120219")); //genesis hash
         assert(genesis.hashMerkleRoot == uint256S("0xff5d83b39d0bd70504805b0cf602c09b90df7c2db0db79abe913dfdbb5a33a9e")); // merkle hash
@@ -187,7 +187,7 @@ public:
         strNetworkID = CBaseChainParams::TESTNET;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
-        consensus.nSubsidyHalvingInterval = 210000;
+        consensus.nSubsidyHalvingInterval = 0x40000; // ~ 182
         consensus.BIP16Exception = uint256S("0x00000000cfa2c10c25d18bb3ced0eb4b40ac913928e8a12484daae9a17b123dd");
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256S("0x00000000cfa2c10c25d18bb3ced0eb4b40ac913928e8a12484daae9a17b123dd");
@@ -197,12 +197,12 @@ public:
         consensus.SegwitHeight = 2; // 00000000002b980fcd729daaa248fd9316a5200e9b367f4ff2c42453e84201ca
         consensus.MinBIP9WarningHeight = 1; // segwit activation height + miner confirmation window
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
+        consensus.nPowTargetTimespan = 7 * 24 * 60 * 60; // two weeks
         consensus.nPowTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 2; // 1512; // 75% for testchains
-        consensus.nMinerConfirmationWindow = 20160; // 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 9072; // 90% of 20160
+        consensus.nMinerConfirmationWindow = 10080; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
@@ -226,7 +226,7 @@ public:
         m_assumed_blockchain_size = 1;
         m_assumed_chain_state_size = 1;
 
-        genesis = CreateGenesisBlock(1645220522, 218767647, 0x1d00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1645220522, 218767647, 0x1d00ffff, 1, 4096 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x00000000cfa2c10c25d18bb3ced0eb4b40ac913928e8a12484daae9a17b123dd"));
         assert(genesis.hashMerkleRoot == uint256S("0xff5d83b39d0bd70504805b0cf602c09b90df7c2db0db79abe913dfdbb5a33a9e"));
@@ -327,7 +327,7 @@ public:
         strNetworkID = CBaseChainParams::SIGNET;
         consensus.signet_blocks = true;
         consensus.signet_challenge.assign(bin.begin(), bin.end());
-        consensus.nSubsidyHalvingInterval = 210000;
+        consensus.nSubsidyHalvingInterval = = 0x40000; // ~ 182
         consensus.BIP16Exception = uint256{};
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256{};
@@ -335,12 +335,12 @@ public:
         consensus.BIP66Height = 1;
         consensus.CSVHeight = 1;
         consensus.SegwitHeight = 1;
-        consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
+        consensus.nPowTargetTimespan = 7 * 24 * 60 * 60; // one weeks
         consensus.nPowTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 18150; // 90% of 2016
-        consensus.nMinerConfirmationWindow = 20160; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 9072; // 90% of 2016
+        consensus.nMinerConfirmationWindow = 10080; // nPowTargetTimespan / nPowTargetSpacing
         consensus.MinBIP9WarningHeight = 0;
         consensus.powLimit = uint256S("00000377ae000000000000000000000000000000000000000000000000000000");
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -363,7 +363,7 @@ public:
         nDefaultPort = 37335;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1645220524, 6205387, 0x1e0377ae, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1645220524, 6205387, 0x1e0377ae, 1, 4096 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x000002304ece720257ed3ecaa911ad4e44265bb9c04940b22ed458c2755fe409"));
         assert(genesis.hashMerkleRoot == uint256S("0xff5d83b39d0bd70504805b0cf602c09b90df7c2db0db79abe913dfdbb5a33a9e"));
@@ -395,7 +395,7 @@ public:
         strNetworkID =  CBaseChainParams::REGTEST;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
-        consensus.nSubsidyHalvingInterval = 150;
+        consensus.nSubsidyHalvingInterval = 0x40000; // ~ 182
         consensus.BIP16Exception = uint256();
         consensus.BIP34Height = 500; // BIP34 activated on regtest (Used in functional tests)
         consensus.BIP34Hash = uint256();
@@ -405,7 +405,7 @@ public:
         consensus.SegwitHeight = 0; // SEGWIT is always activated on regtest unless overridden
         consensus.MinBIP9WarningHeight = 0;
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
+        consensus.nPowTargetTimespan = 7 * 24 * 60 * 60; // one weeks
         consensus.nPowTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
@@ -436,7 +436,7 @@ public:
 
         UpdateActivationParametersFromArgs(args);
 
-        genesis = CreateGenesisBlock(1645220523, 0, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1645220523, 0, 0x207fffff, 1, 4096 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x7f79462dea7b193881bb10da0cc5c9e4084cf0053d6d1326d018148f6a20a8f9"));
         assert(genesis.hashMerkleRoot == uint256S("0xff5d83b39d0bd70504805b0cf602c09b90df7c2db0db79abe913dfdbb5a33a9e"));
