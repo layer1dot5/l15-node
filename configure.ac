@@ -7,7 +7,7 @@ define(_CLIENT_VERSION_IS_RELEASE, true)
 define(_COPYRIGHT_YEAR, 2021)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
 define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[L15, Bitcoin Core]])
-AC_INIT([L15 Core],m4_join([.], _CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MINOR, _CLIENT_VERSION_BUILD)m4_if(_CLIENT_VERSION_RC, [0], [], [rc]_CLIENT_VERSION_RC),[https://github.com/L15-Foundation/l15/issues],[l15],[https://github.com/L15-Foundation/l15/])
+AC_INIT([L15 Node],m4_join([.], _CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MINOR, _CLIENT_VERSION_BUILD)m4_if(_CLIENT_VERSION_RC, [0], [], [rc]_CLIENT_VERSION_RC),[https://github.com/L15-Foundation/l15/issues],[l15],[https://github.com/L15-Foundation/l15/])
 AC_CONFIG_SRCDIR([src/validation.cpp])
 AC_CONFIG_HEADERS([src/config/bitcoin-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -19,15 +19,15 @@ if test "x$PKG_CONFIG" = x; then
   AC_MSG_ERROR([pkg-config not found])
 fi
 
-BITCOIN_DAEMON_NAME=l15d
-BITCOIN_GUI_NAME=l15-qt
-BITCOIN_CLI_NAME=l15-cli
-BITCOIN_TX_NAME=l15-tx
-BITCOIN_UTIL_NAME=l15-util
-BITCOIN_WALLET_TOOL_NAME=l15-wallet
+L15NODE_DAEMON_NAME=l15noded
+L15NODE_GUI_NAME=l15node-qt
+L15NODE_CLI_NAME=l15node-cli
+L15NODE_TX_NAME=l15node-tx
+L15NODE_UTIL_NAME=l15node-util
+L15NODE_WALLET_TOOL_NAME=l15node-wallet
 dnl Multi Process
-BITCOIN_MP_NODE_NAME=l15-node
-BITCOIN_MP_GUI_NAME=l15-gui
+L15NODE_MP_NODE_NAME=l15node-node
+L15NODE_MP_GUI_NAME=l15node-gui
 
 dnl Unless the user specified ARFLAGS, force it to be cr
 AC_ARG_VAR(ARFLAGS, [Flags for the archiver, defaults to <cr> if not set])
@@ -288,7 +288,7 @@ AC_ARG_WITH([mpgen],
 
 AC_ARG_ENABLE([multiprocess],
   [AS_HELP_STRING([--enable-multiprocess],
-  [build multiprocess l15-node, l15-wallet, and l15-gui executables in addition to monolithic l15d and l15-qt executables. Requires libmultiprocess library. Experimental (default is no)])],
+  [build multiprocess l15node-node, l15node-wallet, and l15node-gui executables in addition to monolithic l15noded and l15node-qt executables. Requires libmultiprocess library. Experimental (default is no)])],
   [enable_multiprocess=$enableval],
   [enable_multiprocess=no])
 
@@ -587,31 +587,31 @@ CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
 AC_ARG_WITH([utils],
   [AS_HELP_STRING([--with-utils],
-  [build l15-cli l15-tx l15-util l15-wallet (default=yes)])],
+  [build l15node-cli l15node-tx l15node-util l15node-wallet (default=yes)])],
   [build_l15_utils=$withval],
   [build_l15_utils=yes])
 
 AC_ARG_ENABLE([util-cli],
   [AS_HELP_STRING([--enable-util-cli],
-  [build l15-cli])],
+  [build l15node-cli])],
   [build_l15_cli=$enableval],
   [build_l15_cli=$build_l15_utils])
 
 AC_ARG_ENABLE([util-tx],
   [AS_HELP_STRING([--enable-util-tx],
-  [build l15-tx])],
+  [build l15node-tx])],
   [build_l15_tx=$enableval],
   [build_l15_tx=$build_l15_utils])
 
 AC_ARG_ENABLE([util-wallet],
   [AS_HELP_STRING([--enable-util-wallet],
-  [build l15-wallet])],
+  [build l15node-wallet])],
   [build_l15_wallet=$enableval],
   [build_l15_wallet=$build_l15_utils])
 
 AC_ARG_ENABLE([util-util],
   [AS_HELP_STRING([--enable-util-util],
-  [build l15-util])],
+  [build l15node-util])],
   [build_l15_util=$enableval],
   [build_l15_util=$build_l15_utils])
 
@@ -623,7 +623,7 @@ AC_ARG_WITH([libs],
 
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
-  [build l15d daemon (default=yes)])],
+  [build l15noded daemon (default=yes)])],
   [build_l15d=$withval],
   [build_l15d=yes])
 
@@ -934,7 +934,7 @@ AC_CHECK_DECLS([getifaddrs, freeifaddrs],[CHECK_SOCKET],,
 )
 AC_CHECK_DECLS([strnlen])
 
-dnl These are used for daemonization in l15d
+dnl These are used for daemonization in l15noded
 AC_CHECK_DECLS([fork])
 AC_CHECK_DECLS([setsid])
 
@@ -1571,23 +1571,23 @@ if test x$build_multiprocess != xno; then
   AC_SUBST(MPGEN_PREFIX)
 fi
 
-AC_MSG_CHECKING([whether to build l15d])
+AC_MSG_CHECKING([whether to build l15noded])
 AM_CONDITIONAL([BUILD_BITCOIND], [test x$build_l15d = xyes])
 AC_MSG_RESULT($build_l15d)
 
-AC_MSG_CHECKING([whether to build l15-cli])
+AC_MSG_CHECKING([whether to build l15node-cli])
 AM_CONDITIONAL([BUILD_BITCOIN_CLI], [test x$build_l15_cli = xyes])
 AC_MSG_RESULT($build_l15_cli)
 
-AC_MSG_CHECKING([whether to build l15-tx])
+AC_MSG_CHECKING([whether to build l15node-tx])
 AM_CONDITIONAL([BUILD_BITCOIN_TX], [test x$build_l15_tx = xyes])
 AC_MSG_RESULT($build_l15_tx)
 
-AC_MSG_CHECKING([whether to build l15-wallet])
+AC_MSG_CHECKING([whether to build l15node-wallet])
 AM_CONDITIONAL([BUILD_BITCOIN_WALLET], [test x$build_l15_wallet = xyes])
 AC_MSG_RESULT($build_l15_wallet)
 
-AC_MSG_CHECKING([whether to build l15-util])
+AC_MSG_CHECKING([whether to build l15node-util])
 AM_CONDITIONAL([BUILD_BITCOIN_UTIL], [test x$build_l15_util = xyes])
 AC_MSG_RESULT($build_l15_util)
 
@@ -1798,14 +1798,14 @@ AC_SUBST(COPYRIGHT_YEAR, _COPYRIGHT_YEAR)
 AC_SUBST(COPYRIGHT_HOLDERS, "_COPYRIGHT_HOLDERS")
 AC_SUBST(COPYRIGHT_HOLDERS_SUBSTITUTION, "_COPYRIGHT_HOLDERS_SUBSTITUTION")
 AC_SUBST(COPYRIGHT_HOLDERS_FINAL, "_COPYRIGHT_HOLDERS_FINAL")
-AC_SUBST(BITCOIN_DAEMON_NAME)
-AC_SUBST(BITCOIN_GUI_NAME)
-AC_SUBST(BITCOIN_CLI_NAME)
-AC_SUBST(BITCOIN_TX_NAME)
-AC_SUBST(BITCOIN_UTIL_NAME)
-AC_SUBST(BITCOIN_WALLET_TOOL_NAME)
-AC_SUBST(BITCOIN_MP_NODE_NAME)
-AC_SUBST(BITCOIN_MP_GUI_NAME)
+AC_SUBST(L15NODE_DAEMON_NAME)
+AC_SUBST(L15NODE_GUI_NAME)
+AC_SUBST(L15NODE_CLI_NAME)
+AC_SUBST(L15NODE_TX_NAME)
+AC_SUBST(L15NODE_UTIL_NAME)
+AC_SUBST(L15NODE_WALLET_TOOL_NAME)
+AC_SUBST(L15NODE_MP_NODE_NAME)
+AC_SUBST(L15NODE_MP_GUI_NAME)
 
 AC_SUBST(RELDFLAGS)
 AC_SUBST(DEBUG_CPPFLAGS)

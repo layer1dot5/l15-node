@@ -87,29 +87,29 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += l15d
+  bin_PROGRAMS += l15noded
 endif
 
 if BUILD_BITCOIN_NODE
-  bin_PROGRAMS += l15-node
+  bin_PROGRAMS += l15node-node
 endif
 
 if BUILD_BITCOIN_CLI
-  bin_PROGRAMS += l15-cli
+  bin_PROGRAMS += l15node-cli
 endif
 
 if BUILD_BITCOIN_TX
-  bin_PROGRAMS += l15-tx
+  bin_PROGRAMS += l15node-tx
 endif
 
 if ENABLE_WALLET
 if BUILD_BITCOIN_WALLET
-  bin_PROGRAMS += l15-wallet
+  bin_PROGRAMS += l15node-wallet
 endif
 endif
 
 if BUILD_BITCOIN_UTIL
-  bin_PROGRAMS += l15-util
+  bin_PROGRAMS += l15node-util
 endif
 
 .PHONY: FORCE check-symbols check-security
@@ -314,7 +314,7 @@ libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 
 ipc/capnp/libbitcoin_ipc_a-ipc.$(OBJEXT): $(libbitcoin_ipc_mpgen_input:=.h)
 
-# server: shared between l15d and l15-qt
+# server: shared between l15noded and l15node-qt
 # Contains code accessing mempool and chain state that is meant to be separated
 # from wallet and gui code (see node/README.md). Shared code should go in
 # libbitcoin_common or libbitcoin_util libraries, instead.
@@ -397,7 +397,7 @@ libbitcoin_zmq_a_SOURCES = \
 endif
 
 
-# wallet: shared between l15d and l15-qt, but only linked
+# wallet: shared between l15noded and l15node-qt, but only linked
 # when wallet enabled
 libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(SQLITE_CFLAGS)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -530,7 +530,7 @@ libbitcoin_consensus_a_SOURCES = \
   util/strencodings.h \
   version.h
 
-# common: shared between l15d, and l15-qt and non-server tools
+# common: shared between l15noded, and l15node-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_common_a_SOURCES = \
@@ -622,7 +622,7 @@ libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
 AM_LDFLAGS += $(COMPAT_LDFLAGS)
 endif
 
-# cli: shared between l15-cli and l15-qt
+# cli: shared between l15node-cli and l15node-qt
 libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_cli_a_SOURCES = \
@@ -634,7 +634,7 @@ libbitcoin_cli_a_SOURCES = \
 nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
-# l15d & l15-node binaries #
+# l15noded & l15node-node binaries #
 bitcoin_daemon_sources = bitcoind.cpp
 bitcoin_bin_cppflags = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 bitcoin_bin_cxxflags = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -659,48 +659,48 @@ bitcoin_bin_ldadd = \
 
 bitcoin_bin_ldadd += $(BOOST_LIBS) $(BDB_LIBS) $(MINIUPNPC_LIBS) $(NATPMP_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SQLITE_LIBS)
 
-l15d_SOURCES = $(bitcoin_daemon_sources) init/bitcoind.cpp
-l15d_CPPFLAGS = $(bitcoin_bin_cppflags)
-l15d_CXXFLAGS = $(bitcoin_bin_cxxflags)
-l15d_LDFLAGS = $(bitcoin_bin_ldflags)
-l15d_LDADD = $(LIBBITCOIN_SERVER) $(bitcoin_bin_ldadd)
+l15noded_SOURCES = $(bitcoin_daemon_sources) init/bitcoind.cpp
+l15noded_CPPFLAGS = $(bitcoin_bin_cppflags)
+l15noded_CXXFLAGS = $(bitcoin_bin_cxxflags)
+l15noded_LDFLAGS = $(bitcoin_bin_ldflags)
+l15noded_LDADD = $(LIBBITCOIN_SERVER) $(bitcoin_bin_ldadd)
 
-l15_node_SOURCES = $(bitcoin_daemon_sources) init/bitcoin-node.cpp
-l15_node_CPPFLAGS = $(bitcoin_bin_cppflags)
-l15_node_CXXFLAGS = $(bitcoin_bin_cxxflags)
-l15_node_LDFLAGS = $(bitcoin_bin_ldflags)
-l15_node_LDADD = $(LIBBITCOIN_SERVER) $(bitcoin_bin_ldadd) $(LIBBITCOIN_IPC) $(LIBMULTIPROCESS_LIBS)
+l15node_node_SOURCES = $(bitcoin_daemon_sources) init/bitcoin-node.cpp
+l15node_node_CPPFLAGS = $(bitcoin_bin_cppflags)
+l15node_node_CXXFLAGS = $(bitcoin_bin_cxxflags)
+l15node_node_LDFLAGS = $(bitcoin_bin_ldflags)
+l15node_node_LDADD = $(LIBBITCOIN_SERVER) $(bitcoin_bin_ldadd) $(LIBBITCOIN_IPC) $(LIBMULTIPROCESS_LIBS)
 
 # l15-cli binary #
-l15_cli_SOURCES = bitcoin-cli.cpp
-l15_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-l15_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-l15_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
+l15node_cli_SOURCES = bitcoin-cli.cpp
+l15node_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+l15node_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+l15node_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 
 if TARGET_WINDOWS
-l15_cli_SOURCES += bitcoin-cli-res.rc
+l15node_cli_SOURCES += bitcoin-cli-res.rc
 endif
 
-l15_cli_LDADD = \
+l15node_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO)
 
-l15_cli_LDADD += $(BOOST_LIBS) $(EVENT_LIBS)
+l15node_cli_LDADD += $(BOOST_LIBS) $(EVENT_LIBS)
 #
 
 # l15-tx binary #
-l15_tx_SOURCES = bitcoin-tx.cpp
-l15_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-l15_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-l15_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
+l15node_tx_SOURCES = bitcoin-tx.cpp
+l15node_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+l15node_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+l15node_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 
 if TARGET_WINDOWS
-l15_tx_SOURCES += bitcoin-tx-res.rc
+l15node_tx_SOURCES += bitcoin-tx-res.rc
 endif
 
-l15_tx_LDADD = \
+l15node_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
@@ -708,32 +708,32 @@ l15_tx_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-l15_tx_LDADD += $(BOOST_LIBS)
+l15node_tx_LDADD += $(BOOST_LIBS)
 #
 
 # l15-wallet binary #
-l15_wallet_SOURCES = bitcoin-wallet.cpp
-l15_wallet_CPPFLAGS = $(bitcoin_bin_cppflags)
-l15_wallet_CXXFLAGS = $(bitcoin_bin_cxxflags)
-l15_wallet_LDFLAGS = $(bitcoin_bin_ldflags)
-l15_wallet_LDADD = $(LIBBITCOIN_WALLET_TOOL) $(bitcoin_bin_ldadd)
+l15node_wallet_SOURCES = bitcoin-wallet.cpp
+l15node_wallet_CPPFLAGS = $(bitcoin_bin_cppflags)
+l15node_wallet_CXXFLAGS = $(bitcoin_bin_cxxflags)
+l15node_wallet_LDFLAGS = $(bitcoin_bin_ldflags)
+l15node_wallet_LDADD = $(LIBBITCOIN_WALLET_TOOL) $(bitcoin_bin_ldadd)
 
 if TARGET_WINDOWS
-l15_wallet_SOURCES += bitcoin-wallet-res.rc
+l15node_wallet_SOURCES += bitcoin-wallet-res.rc
 endif
 #
 
 # l15-util binary #
-l15_util_SOURCES = bitcoin-util.cpp
-l15_util_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-l15_util_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-l15_util_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
+l15node_util_SOURCES = bitcoin-util.cpp
+l15node_util_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+l15node_util_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+l15node_util_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 
 if TARGET_WINDOWS
-l15_util_SOURCES += bitcoin-util-res.rc
+l15node_util_SOURCES += bitcoin-util-res.rc
 endif
 
-l15_util_LDADD = \
+l15node_util_LDADD = \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
   $(LIBUNIVALUE) \
@@ -741,7 +741,7 @@ l15_util_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-l15_util_LDADD += $(BOOST_LIBS)
+l15node_util_LDADD += $(BOOST_LIBS)
 #
 
 # bitcoinconsensus library #

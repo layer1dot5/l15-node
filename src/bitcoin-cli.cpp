@@ -60,7 +60,7 @@ static void SetupCliArgs(ArgsManager& argsman)
     argsman.AddArg("-version", "Print version and exit", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-conf=<file>", strprintf("Specify configuration file. Relative paths will be prefixed by datadir location. (default: %s)", BITCOIN_CONF_FILENAME), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-datadir=<dir>", "Specify data directory", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
-    argsman.AddArg("-generate", strprintf("Generate blocks immediately, equivalent to RPC getnewaddress followed by RPC generatetoaddress. Optional positional integer arguments are number of blocks to generate (default: %s) and maximum iterations to try (default: %s), equivalent to RPC generatetoaddress nblocks and maxtries arguments. Example: l15-cli -generate 4 1000", DEFAULT_NBLOCKS, DEFAULT_MAX_TRIES), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    argsman.AddArg("-generate", strprintf("Generate blocks immediately, equivalent to RPC getnewaddress followed by RPC generatetoaddress. Optional positional integer arguments are number of blocks to generate (default: %s) and maximum iterations to try (default: %s), equivalent to RPC generatetoaddress nblocks and maxtries arguments. Example: l15node-cli -generate 4 1000", DEFAULT_NBLOCKS, DEFAULT_MAX_TRIES), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-addrinfo", "Get the number of addresses known to the node, per network and total.", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-getinfo", "Get general information from the remote server. Note that unlike server-side RPC calls, the results of -getinfo is the result of multiple non-atomic requests. Some entries in the result may represent results from different states (e.g. wallet balance may be as of a different block from the chain state reported)", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-netinfo", "Get network peer connection information from the remote server. An optional integer argument from 0 to 4 can be passed for different peers listings (default: 0). Pass \"help\" for detailed help documentation.", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
@@ -123,10 +123,10 @@ static int AppInitRPC(int argc, char* argv[])
         std::string strUsage = PACKAGE_NAME " RPC client version " + FormatFullVersion() + "\n";
         if (!gArgs.IsArgSet("-version")) {
             strUsage += "\n"
-                "Usage:  l15-cli [options] <command> [params]  Send command to " PACKAGE_NAME "\n"
-                "or:     l15-cli [options] -named <command> [name=value]...  Send command to " PACKAGE_NAME " (with named arguments)\n"
-                "or:     l15-cli [options] help                List commands\n"
-                "or:     l15-cli [options] help <command>      Get help for a command\n";
+                "Usage:  l15node-cli [options] <command> [params]  Send command to " PACKAGE_NAME "\n"
+                "or:     l15node-cli [options] -named <command> [name=value]...  Send command to " PACKAGE_NAME " (with named arguments)\n"
+                "or:     l15node-cli [options] help                List commands\n"
+                "or:     l15node-cli [options] help <command>      Get help for a command\n";
             strUsage += "\n" + gArgs.GetHelpMessage();
         }
 
@@ -433,7 +433,7 @@ public:
             if (ParseUInt8(args.at(0), &n)) {
                 m_details_level = std::min(n, MAX_DETAIL_LEVEL);
             } else {
-                throw std::runtime_error(strprintf("invalid -netinfo argument: %s\nFor more information, run: l15-cli -netinfo help", args.at(0)));
+                throw std::runtime_error(strprintf("invalid -netinfo argument: %s\nFor more information, run: l15node-cli -netinfo help", args.at(0)));
             }
         }
         UniValue result(UniValue::VARR);
@@ -614,15 +614,15 @@ public:
         "* The local addresses table lists each local address broadcast by the node, the port, and the score.\n\n"
         "Examples:\n\n"
         "Connection counts and local addresses only\n"
-        "> l15-cli -netinfo\n\n"
+        "> l15node-cli -netinfo\n\n"
         "Compact peers listing\n"
-        "> l15-cli -netinfo 1\n\n"
+        "> l15node-cli -netinfo 1\n\n"
         "Full dashboard\n"
-        + strprintf("> l15-cli -netinfo %d\n\n", MAX_DETAIL_LEVEL) +
+        + strprintf("> l15node-cli -netinfo %d\n\n", MAX_DETAIL_LEVEL) +
         "Full live dashboard, adjust --interval or --no-title as needed (Linux)\n"
-        + strprintf("> watch --interval 1 --no-title l15-cli -netinfo %d\n\n", MAX_DETAIL_LEVEL) +
+        + strprintf("> watch --interval 1 --no-title l15node-cli -netinfo %d\n\n", MAX_DETAIL_LEVEL) +
         "See this help\n"
-        "> l15-cli -netinfo help\n"};
+        "> l15node-cli -netinfo help\n"};
 };
 
 /** Process RPC generatetoaddress request. */

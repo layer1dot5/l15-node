@@ -2,10 +2,10 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-bin_PROGRAMS += qt/l15-qt
+bin_PROGRAMS += qt/l15node-qt
 
 if BUILD_BITCOIN_GUI
-  bin_PROGRAMS += l15-gui
+  bin_PROGRAMS += l15node-gui
 endif
 
 EXTRA_LIBRARIES += qt/libbitcoinqt.a
@@ -309,9 +309,9 @@ QT_FORMS_H=$(join $(dir $(QT_FORMS_UI)),$(addprefix ui_, $(notdir $(QT_FORMS_UI:
 # Most files will depend on the forms and moc files as includes. Generate them
 # before anything else.
 $(QT_MOC): $(QT_FORMS_H)
-$(qt_libbitcoinqt_a_OBJECTS) $(qt_bitcoin_qt_OBJECTS) $(bitcoin_gui_OBJECTS) : | $(QT_MOC)
+$(qt_libbitcoinqt_a_OBJECTS) $(qt_l15node_qt_OBJECTS) $(l15node_gui_OBJECTS) : | $(QT_MOC)
 
-# l15-qt and l15-gui binaries #
+# l15node-qt and l15node-gui binaries #
 bitcoin_qt_cppflags = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
   $(QT_INCLUDES) $(QR_CFLAGS)
 bitcoin_qt_cxxflags = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
@@ -333,19 +333,19 @@ bitcoin_qt_ldadd += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(
 bitcoin_qt_ldflags = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 bitcoin_qt_libtoolflags = $(AM_LIBTOOLFLAGS) --tag CXX
 
-qt_l15_qt_CPPFLAGS = $(bitcoin_qt_cppflags)
-qt_l15_qt_CXXFLAGS = $(bitcoin_qt_cxxflags)
-qt_l15_qt_SOURCES = $(bitcoin_qt_sources)
-qt_l15_qt_LDADD = $(bitcoin_qt_ldadd)
-qt_l15_qt_LDFLAGS = $(bitcoin_qt_ldflags)
-qt_l15_qt_LIBTOOLFLAGS = $(bitcoin_qt_libtoolflags)
+qt_l15node_qt_CPPFLAGS = $(bitcoin_qt_cppflags)
+qt_l15node_qt_CXXFLAGS = $(bitcoin_qt_cxxflags)
+qt_l15node_qt_SOURCES = $(bitcoin_qt_sources)
+qt_l15node_qt_LDADD = $(bitcoin_qt_ldadd)
+qt_l15node_qt_LDFLAGS = $(bitcoin_qt_ldflags)
+qt_l15node_qt_LIBTOOLFLAGS = $(bitcoin_qt_libtoolflags)
 
-l15_gui_CPPFLAGS = $(bitcoin_qt_cppflags)
-l15_gui_CXXFLAGS = $(bitcoin_qt_cxxflags)
-l15_gui_SOURCES = $(bitcoin_qt_sources)
-l15_gui_LDADD = $(bitcoin_qt_ldadd)
-l15_gui_LDFLAGS = $(bitcoin_qt_ldflags)
-l15_gui_LIBTOOLFLAGS = $(bitcoin_qt_libtoolflags)
+l15node_gui_CPPFLAGS = $(bitcoin_qt_cppflags)
+l15node_gui_CXXFLAGS = $(bitcoin_qt_cxxflags)
+l15node_gui_SOURCES = $(bitcoin_qt_sources)
+l15node_gui_LDADD = $(bitcoin_qt_ldadd)
+l15node_gui_LDFLAGS = $(bitcoin_qt_ldflags)
+l15node_gui_LIBTOOLFLAGS = $(bitcoin_qt_libtoolflags)
 
 #locale/foo.ts -> locale/foo.qm
 QT_QM=$(QT_TS:.ts=.qm)
@@ -377,9 +377,9 @@ CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda 
 CLEANFILES += $(CLEAN_QT)
 
 bitcoin_qt_clean: FORCE
-	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_bitcoin_qt_OBJECTS) qt/bitcoin-qt$(EXEEXT) $(LIBBITCOINQT)
+	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_l15node_qt_OBJECTS) qt/l15node-qt$(EXEEXT) $(LIBBITCOINQT)
 
-l15_qt : qt/l15-qt$(EXEEXT)
+l15_qt : qt/l15node-qt$(EXEEXT)
 
 APK_LIB_DIR = qt/android/libs/$(ANDROID_ARCH)
 QT_BASE_VERSION = $(lastword $(shell $(MOC) --version))
