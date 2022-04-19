@@ -436,7 +436,7 @@ public:
 
         UpdateActivationParametersFromArgs(args);
 
-        genesis = CreateGenesisBlock(1650038357, 0, 0x207fffff, 1, 4096 * COIN);
+        genesis = CreateGenesisBlock(1650038357, 2, 0x207fffff, 1, 4096 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x4303bc7d3a709818e0b2ceed33ca81ca432bf3a063584ce24aa478c66637d34a"));
         assert(genesis.hashMerkleRoot == uint256S("0x12dedffefa2a11120e6e2ae3b278e53dfec6911feef1653adc4fc10d5256ebb7"));
