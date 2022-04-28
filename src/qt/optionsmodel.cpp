@@ -73,13 +73,13 @@ void OptionsModel::Init(bool resetSettings)
 
     // Display
     if (!settings.contains("DisplayBitcoinUnit")) {
-        settings.setValue("DisplayBitcoinUnit", QVariant::fromValue(BitcoinUnit::BTC));
+        settings.setValue("DisplayBitcoinUnit", QVariant::fromValue(BitcoinUnit::L15SR));
     }
     QVariant unit = settings.value("DisplayBitcoinUnit");
     if (unit.canConvert<BitcoinUnit>()) {
         m_display_bitcoin_unit = unit.value<BitcoinUnit>();
     } else {
-        m_display_bitcoin_unit = BitcoinUnit::BTC;
+        m_display_bitcoin_unit = BitcoinUnit::L15SR;
         settings.setValue("DisplayBitcoinUnit", QVariant::fromValue(m_display_bitcoin_unit));
     }
 

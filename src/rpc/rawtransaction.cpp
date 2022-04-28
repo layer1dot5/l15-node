@@ -684,7 +684,7 @@ static RPCHelpMan decodepsbt()
 {
     return RPCHelpMan{
         "decodepsbt",
-        "Return a JSON object representing the serialized, base64-encoded partially signed Bitcoin transaction.",
+        "Return a JSON object representing the serialized, base64-encoded partially signed L15 transaction.",
                 {
                     {"psbt", RPCArg::Type::STR, RPCArg::Optional::NO, "The PSBT base64 string"},
                 },
@@ -736,7 +736,7 @@ static RPCHelpMan decodepsbt()
                                         {RPCResult::Type::STR, "desc", "Inferred descriptor for the output"},
                                         {RPCResult::Type::STR_HEX, "hex", "The hex"},
                                         {RPCResult::Type::STR, "type", "The type, eg 'pubkeyhash'"},
-                                        {RPCResult::Type::STR, "address", /*optional=*/true, "The Bitcoin address (only if a well-defined address exists)"},
+                                        {RPCResult::Type::STR, "address", /*optional=*/true, "The L15 address (only if a well-defined address exists)"},
                                     }},
                                 }},
                                 {RPCResult::Type::OBJ_DYN, "partial_signatures", /*optional=*/true, "",
@@ -1149,7 +1149,7 @@ static RPCHelpMan decodepsbt()
 static RPCHelpMan combinepsbt()
 {
     return RPCHelpMan{"combinepsbt",
-                "\nCombine multiple partially signed Bitcoin transactions into one transaction.\n"
+                "\nCombine multiple partially signed L15 transactions into one transaction.\n"
                 "Implements the Combiner role.\n",
                 {
                     {"txs", RPCArg::Type::ARR, RPCArg::Optional::NO, "The base64 strings of partially signed transactions",
