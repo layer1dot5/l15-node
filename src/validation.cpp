@@ -1548,6 +1548,7 @@ void CChainState::InitCoinsCache(size_t cache_size_bytes)
 //
 bool CChainState::IsInitialBlockDownload() const
 {
+  return true;
     // Optimization: pre-test latch before taking the lock.
     if (m_cached_finished_ibd.load(std::memory_order_relaxed))
         return false;
@@ -3522,7 +3523,7 @@ static bool ContextualCheckBlock(const CBlock& block, BlockValidationState& stat
         CScript expect = CScript() << nHeight;
         if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
             !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
-            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cb-height", "block height mismatch in coinbase");
+            //return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cb-height", "block height mismatch in coinbase");
         }
     }
 

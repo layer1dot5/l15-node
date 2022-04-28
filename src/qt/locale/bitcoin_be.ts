@@ -66,7 +66,7 @@
         <translation type="unfinished">адрасы Прымання</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <source>These are your L15 addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation type="unfinished">Тут знаходзяцца Біткойн-адрасы для высылання плацяжоў. Заўсёды спраўджвайце колькасць і адрас прызначэння перад здзяйсненнем транзакцыі.</translation>
     </message>
     <message>
@@ -261,7 +261,7 @@
     </message>
     </context>
 <context>
-    <name>bitcoin-core</name>
+    <name>l15</name>
     <message>
         <source>Do you want to rebuild the block database now?</source>
         <translation type="unfinished">Ці жадаеце вы перабудаваць зараз базу звестак блокаў?</translation>
@@ -312,7 +312,7 @@
     </message>
     </context>
 <context>
-    <name>BitcoinGUI</name>
+    <name>L15GUI</name>
     <message>
         <source>&amp;Overview</source>
         <translation type="unfinished">Агляд</translation>
@@ -346,8 +346,8 @@
         <translation type="unfinished">Паказаць інфармацыю аб Qt</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Даслаць манеты на Біткойн-адрас</translation>
+        <source>Send coins to a L15 address</source>
+        <translation type="unfinished">Даслаць манеты на L15-адрас</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -370,11 +370,11 @@
         <translation type="unfinished">Зашыфраваць прыватныя ключы, якия належаць вашаму гаманцу</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
+        <source>Sign messages with your L15 addresses to prove you own them</source>
         <translation type="unfinished">Падпісаць паведамленне з дапамогай Біткойн-адраса каб даказаць, што яно належыць вам</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
+        <source>Verify messages to ensure they were signed with specified L15 addresses</source>
         <translation type="unfinished">Спраўдзіць паведамленне з дапамогай Біткойн-адраса каб даказаць, што яно належыць вам</translation>
     </message>
     <message>
@@ -390,7 +390,7 @@
         <translation type="unfinished">Дапамога</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <source>Request payments (generates QR codes and l15: URIs)</source>
         <translation type="unfinished">Запатрабаваць плацёж (генеруецца QR-код для біткойн URI)</translation>
     </message>
     <message>
@@ -442,7 +442,7 @@
         <translation type="unfinished">Сінхранізавана</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to L15 network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
             <numerusform />
@@ -656,7 +656,7 @@
 <context>
     <name>Intro</name>
     <message>
-        <source>Bitcoin</source>
+        <source>L15</source>
         <translation type="unfinished">Біткойн</translation>
     </message>
     <message numerus="yes">
