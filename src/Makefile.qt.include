@@ -340,7 +340,7 @@ qt_l15node_qt_CPPFLAGS = $(bitcoin_qt_cppflags)
 qt_l15node_qt_CXXFLAGS = $(bitcoin_qt_cxxflags)
 qt_l15node_qt_SOURCES = $(bitcoin_qt_sources) init/bitcoin-qt.cpp
 qt_l15node_qt_LDADD = $(bitcoin_qt_ldadd)
-qtl15node_qt_LDFLAGS = $(bitcoin_qt_ldflags)
+qt_l15node_qt_LDFLAGS = $(bitcoin_qt_ldflags)
 qt_l15node_qt_LIBTOOLFLAGS = $(bitcoin_qt_libtoolflags)
 
 l15node_gui_CPPFLAGS = $(bitcoin_qt_cppflags)

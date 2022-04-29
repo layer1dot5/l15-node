@@ -651,9 +651,9 @@ AC_ARG_ENABLE([util-util],
 
 AC_ARG_ENABLE([experimental-util-chainstate],
   [AS_HELP_STRING([--enable-experimental-util-chainstate],
-  [build experimental bitcoin-chainstate executable (default=no)])],
-  [build_bitcoin_chainstate=$enableval],
-  [build_bitcoin_chainstate=no])
+  [build experimental l15node-chainstate executable (default=no)])],
+  [build_l15_chainstate=$enableval],
+  [build_l15_chainstate=no])
 
 AC_ARG_WITH([libs],
   [AS_HELP_STRING([--with-libs],
@@ -1665,13 +1665,13 @@ AC_MSG_CHECKING([whether to build l15node-util])
 AM_CONDITIONAL([BUILD_BITCOIN_UTIL], [test $build_l15_util = "yes"])
 AC_MSG_RESULT($build_l15_util)
 
-AC_MSG_CHECKING([whether to build experimental bitcoin-chainstate])
+AC_MSG_CHECKING([whether to build experimental l15node-chainstate])
 if test "$build_experimental_kernel_lib" = "no"; then
-AC_MSG_ERROR([experimental bitcoin-chainstate cannot be built without the experimental bitcoinkernel library. Use --with-experimental-kernel-lib]);
+AC_MSG_ERROR([experimental l15node-chainstate cannot be built without the experimental bitcoinkernel library. Use --with-experimental-kernel-lib]);
 else
-  AM_CONDITIONAL([BUILD_BITCOIN_CHAINSTATE], [test $build_bitcoin_chainstate = "yes"])
+  AM_CONDITIONAL([BUILD_BITCOIN_CHAINSTATE], [test $build_l15_chainstate = "yes"])
 fi
-AC_MSG_RESULT($build_bitcoin_chainstate)
+AC_MSG_RESULT($build_l15_chainstate)
 
 AC_MSG_CHECKING([whether to build libraries])
 AM_CONDITIONAL([BUILD_BITCOIN_LIBS], [test $build_bitcoin_libs = "yes"])

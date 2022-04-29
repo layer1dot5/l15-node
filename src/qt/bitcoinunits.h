@@ -39,7 +39,8 @@ public:
     /** Bitcoin units.
       @note Source: https://en.bitcoin.it/wiki/Units . Please add only sensible ones
      */
-    enum class Unit {
+    enum Unit
+    {
         L15SR,
         mL15SR,
         uL15SR,

@@ -257,7 +257,7 @@ void BitcoinGUI::createActions()
     tabGroup->addAction(overviewAction);
 
     sendCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/send"), tr("&Send"), this);
-    sendCoinsAction->setStatusTip(tr("Send coins to a L15 address"));
+    sendCoinsAction->setStatusTip(tr("Send coins to a address"));
     sendCoinsAction->setToolTip(sendCoinsAction->statusTip());
     sendCoinsAction->setCheckable(true);
     sendCoinsAction->setShortcut(QKeySequence(QStringLiteral("Alt+2")));
@@ -314,13 +314,13 @@ void BitcoinGUI::createActions()
     changePassphraseAction = new QAction(tr("&Change Passphrase…"), this);
     changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
     signMessageAction = new QAction(tr("Sign &message…"), this);
-    signMessageAction->setStatusTip(tr("Sign messages with your L15 addresses to prove you own them"));
+    signMessageAction->setStatusTip(tr("Sign messages with your addresses to prove you own them"));
     verifyMessageAction = new QAction(tr("&Verify message…"), this);
-    verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified L15 addresses"));
+    verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified addresses"));
     m_load_psbt_action = new QAction(tr("&Load PSBT from file…"), this);
-    m_load_psbt_action->setStatusTip(tr("Load Partially Signed L15 Transaction"));
+    m_load_psbt_action->setStatusTip(tr("Load Partially Signed Transaction"));
     m_load_psbt_clipboard_action = new QAction(tr("Load PSBT from &clipboard…"), this);
-    m_load_psbt_clipboard_action->setStatusTip(tr("Load Partially Signed L15 Transaction from clipboard"));
+    m_load_psbt_clipboard_action->setStatusTip(tr("Load Partially Signed Transaction from clipboard"));
 
     openRPCConsoleAction = new QAction(tr("Node window"), this);
     openRPCConsoleAction->setStatusTip(tr("Open node debugging and diagnostic console"));
@@ -353,7 +353,7 @@ void BitcoinGUI::createActions()
 
     showHelpMessageAction = new QAction(tr("&Command-line options"), this);
     showHelpMessageAction->setMenuRole(QAction::NoRole);
-    showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible L15 command-line options").arg(PACKAGE_NAME));
+    showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible command-line options").arg(PACKAGE_NAME));
 
     m_mask_values_action = new QAction(tr("&Mask values"), this);
     m_mask_values_action->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_M));

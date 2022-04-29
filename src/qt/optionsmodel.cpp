@@ -72,16 +72,9 @@ void OptionsModel::Init(bool resetSettings)
     fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
 
     // Display
-    if (!settings.contains("DisplayBitcoinUnit")) {
-        settings.setValue("DisplayBitcoinUnit", QVariant::fromValue(BitcoinUnit::L15SR));
-    }
-    QVariant unit = settings.value("DisplayBitcoinUnit");
-    if (unit.canConvert<BitcoinUnit>()) {
-        m_display_bitcoin_unit = unit.value<BitcoinUnit>();
-    } else {
-        m_display_bitcoin_unit = BitcoinUnit::L15SR;
-        settings.setValue("DisplayBitcoinUnit", QVariant::fromValue(m_display_bitcoin_unit));
-    }
+    if (!settings.contains("nDisplayUnit"))
+        settings.setValue("nDisplayUnit", BitcoinUnits::L15SR);
+    nDisplayUnit = settings.value("nDisplayUnit").toInt();
 
     if (!settings.contains("strThirdPartyTxUrls"))
         settings.setValue("strThirdPartyTxUrls", "");

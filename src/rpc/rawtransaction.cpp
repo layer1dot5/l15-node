@@ -148,7 +148,7 @@ static std::vector<RPCArg> CreateTxDoc()
             {
                 {"", RPCArg::Type::OBJ_USER_KEYS, RPCArg::Optional::OMITTED, "",
                     {
-                        {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the bitcoin address, the value (float or string) is the amount in " + CURRENCY_UNIT},
+                        {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the address, the value (float or string) is the amount in " + CURRENCY_UNIT},
                     },
                 },
                 {"", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "",
@@ -192,6 +192,48 @@ static RPCHelpMan getrawtransaction()
                          Cat<std::vector<RPCResult>>(
                          {
                              {RPCResult::Type::BOOL, "in_active_chain", /*optional=*/true, "Whether specified block is in the active chain or not (only present with explicit \"blockhash\" argument)"},
+                             {RPCResult::Type::STR_HEX, "hex", "The serialized, hex-encoded data for 'txid'"},
+                             {RPCResult::Type::STR_HEX, "txid", "The transaction id (same as provided)"},
+                             {RPCResult::Type::STR_HEX, "hash", "The transaction hash (differs from txid for witness transactions)"},
+                             {RPCResult::Type::NUM, "size", "The serialized transaction size"},
+                             {RPCResult::Type::NUM, "vsize", "The virtual transaction size (differs from size for witness transactions)"},
+                             {RPCResult::Type::NUM, "weight", "The transaction's weight (between vsize*4-3 and vsize*4)"},
+                             {RPCResult::Type::NUM, "version", "The version"},
+                             {RPCResult::Type::NUM_TIME, "locktime", "The lock time"},
+                             {RPCResult::Type::ARR, "vin", "",
+                             {
+                                 {RPCResult::Type::OBJ, "", "",
+                                 {
+                                     {RPCResult::Type::STR_HEX, "txid", "The transaction id"},
+                                     {RPCResult::Type::NUM, "vout", "The output number"},
+                                     {RPCResult::Type::OBJ, "scriptSig", "The script",
+                                     {
+                                         {RPCResult::Type::STR, "asm", "asm"},
+                                         {RPCResult::Type::STR_HEX, "hex", "hex"},
+                                     }},
+                                     {RPCResult::Type::NUM, "sequence", "The script sequence number"},
+                                     {RPCResult::Type::ARR, "txinwitness", /*optional=*/true, "",
+                                     {
+                                         {RPCResult::Type::STR_HEX, "hex", "hex-encoded witness data (if any)"},
+                                     }},
+                                 }},
+                             }},
+                             {RPCResult::Type::ARR, "vout", "",
+                             {
+                                 {RPCResult::Type::OBJ, "", "",
+                                 {
+                                     {RPCResult::Type::NUM, "value", "The value in " + CURRENCY_UNIT},
+                                     {RPCResult::Type::NUM, "n", "index"},
+                                     {RPCResult::Type::OBJ, "scriptPubKey", "",
+                                     {
+                                         {RPCResult::Type::STR, "asm", "the asm"},
+                                         {RPCResult::Type::STR, "desc", "Inferred descriptor for the output"},
+                                         {RPCResult::Type::STR, "hex", "the hex"},
+                                         {RPCResult::Type::STR, "type", "The type, eg 'pubkeyhash'"},
+                                         {RPCResult::Type::STR, "address", /*optional=*/true, "The address (only if a well-defined address exists)"},
+                                     }},
+                                 }},
+                             }},
                              {RPCResult::Type::STR_HEX, "blockhash", /*optional=*/true, "the block hash"},
                              {RPCResult::Type::NUM, "confirmations", /*optional=*/true, "The confirmations"},
                              {RPCResult::Type::NUM_TIME, "blocktime", /*optional=*/true, "The block time expressed in " + UNIX_EPOCH_TIME},
@@ -331,7 +373,50 @@ static RPCHelpMan decoderawtransaction()
                 },
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
-                    DecodeTxDoc(/*txid_field_doc=*/"The transaction id"),
+                    {
+                        {RPCResult::Type::STR_HEX, "txid", "The transaction id"},
+                        {RPCResult::Type::STR_HEX, "hash", "The transaction hash (differs from txid for witness transactions)"},
+                        {RPCResult::Type::NUM, "size", "The transaction size"},
+                        {RPCResult::Type::NUM, "vsize", "The virtual transaction size (differs from size for witness transactions)"},
+                        {RPCResult::Type::NUM, "weight", "The transaction's weight (between vsize*4 - 3 and vsize*4)"},
+                        {RPCResult::Type::NUM, "version", "The version"},
+                        {RPCResult::Type::NUM_TIME, "locktime", "The lock time"},
+                        {RPCResult::Type::ARR, "vin", "",
+                        {
+                            {RPCResult::Type::OBJ, "", "",
+                            {
+                                {RPCResult::Type::STR_HEX, "coinbase", /*optional=*/true, ""},
+                                {RPCResult::Type::STR_HEX, "txid", /*optional=*/true, "The transaction id"},
+                                {RPCResult::Type::NUM, "vout", /*optional=*/true, "The output number"},
+                                {RPCResult::Type::OBJ, "scriptSig", /*optional=*/true, "The script",
+                                {
+                                    {RPCResult::Type::STR, "asm", "asm"},
+                                    {RPCResult::Type::STR_HEX, "hex", "hex"},
+                                }},
+                                {RPCResult::Type::ARR, "txinwitness", /*optional=*/true, "",
+                                {
+                                    {RPCResult::Type::STR_HEX, "hex", "hex-encoded witness data (if any)"},
+                                }},
+                                {RPCResult::Type::NUM, "sequence", "The script sequence number"},
+                            }},
+                        }},
+                        {RPCResult::Type::ARR, "vout", "",
+                        {
+                            {RPCResult::Type::OBJ, "", "",
+                            {
+                                {RPCResult::Type::NUM, "value", "The value in " + CURRENCY_UNIT},
+                                {RPCResult::Type::NUM, "n", "index"},
+                                {RPCResult::Type::OBJ, "scriptPubKey", "",
+                                {
+                                    {RPCResult::Type::STR, "asm", "the asm"},
+                                    {RPCResult::Type::STR, "desc", "Inferred descriptor for the output"},
+                                    {RPCResult::Type::STR_HEX, "hex", "the hex"},
+                                    {RPCResult::Type::STR, "type", "The type, eg 'pubkeyhash'"},
+                                    {RPCResult::Type::STR, "address", /*optional=*/true, "The address (only if a well-defined address exists)"},
+                                }},
+                            }},
+                        }},
+                    }
                 },
                 RPCExamples{
                     HelpExampleCli("decoderawtransaction", "\"hexstring\"")
@@ -372,7 +457,7 @@ static RPCHelpMan decodescript()
                 {RPCResult::Type::STR, "asm", "Script public key"},
                 {RPCResult::Type::STR, "desc", "Inferred descriptor for the script"},
                 {RPCResult::Type::STR, "type", "The output type (e.g. " + GetAllOutputTypes() + ")"},
-                {RPCResult::Type::STR, "address", /*optional=*/true, "The Bitcoin address (only if a well-defined address exists)"},
+                {RPCResult::Type::STR, "address", /*optional=*/true, "The address (only if a well-defined address exists)"},
                 {RPCResult::Type::STR, "p2sh", /*optional=*/true,
                  "address of P2SH script wrapping this redeem script (not returned for types that should not be wrapped)"},
                 {RPCResult::Type::OBJ, "segwit", /*optional=*/true,
@@ -381,7 +466,7 @@ static RPCHelpMan decodescript()
                      {RPCResult::Type::STR, "asm", "String representation of the script public key"},
                      {RPCResult::Type::STR_HEX, "hex", "Hex string of the script public key"},
                      {RPCResult::Type::STR, "type", "The type of the script public key (e.g. witness_v0_keyhash or witness_v0_scripthash)"},
-                     {RPCResult::Type::STR, "address", /*optional=*/true, "The Bitcoin address (only if a well-defined address exists)"},
+                     {RPCResult::Type::STR, "address", /*optional=*/true, "The address (only if a well-defined address exists)"},
                      {RPCResult::Type::STR, "desc", "Inferred descriptor for the script"},
                      {RPCResult::Type::STR, "p2sh-segwit", "address of the P2SH script wrapping this witness redeem script"},
                  }},
@@ -684,7 +769,7 @@ static RPCHelpMan decodepsbt()
 {
     return RPCHelpMan{
         "decodepsbt",
-        "Return a JSON object representing the serialized, base64-encoded partially signed L15 transaction.",
+        "Return a JSON object representing the serialized, base64-encoded partially signed transaction.",
                 {
                     {"psbt", RPCArg::Type::STR, RPCArg::Optional::NO, "The PSBT base64 string"},
                 },
@@ -736,7 +821,7 @@ static RPCHelpMan decodepsbt()
                                         {RPCResult::Type::STR, "desc", "Inferred descriptor for the output"},
                                         {RPCResult::Type::STR_HEX, "hex", "The hex"},
                                         {RPCResult::Type::STR, "type", "The type, eg 'pubkeyhash'"},
-                                        {RPCResult::Type::STR, "address", /*optional=*/true, "The L15 address (only if a well-defined address exists)"},
+                                        {RPCResult::Type::STR, "address", /*optional=*/true, "The address (only if a well-defined address exists)"},
                                     }},
                                 }},
                                 {RPCResult::Type::OBJ_DYN, "partial_signatures", /*optional=*/true, "",
@@ -1149,7 +1234,7 @@ static RPCHelpMan decodepsbt()
 static RPCHelpMan combinepsbt()
 {
     return RPCHelpMan{"combinepsbt",
-                "\nCombine multiple partially signed L15 transactions into one transaction.\n"
+                "\nCombine multiple partially signed transactions into one transaction.\n"
                 "Implements the Combiner role.\n",
                 {
                     {"txs", RPCArg::Type::ARR, RPCArg::Optional::NO, "The base64 strings of partially signed transactions",

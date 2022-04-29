@@ -111,7 +111,7 @@ if BUILD_BITCOIN_UTIL
 endif
 
 if BUILD_BITCOIN_CHAINSTATE
-  bin_PROGRAMS += bitcoin-chainstate
+  bin_PROGRAMS += l15node-chainstate
 endif
 
 .PHONY: FORCE check-symbols check-security
@@ -747,7 +747,7 @@ l15node_cli_LDADD = \
 l15node_cli_LDADD += $(EVENT_LIBS)
 #
 
-# l15-tx binary #
+# l15node-tx binary #
 l15node_tx_SOURCES = bitcoin-tx.cpp
 l15node_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 l15node_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -766,7 +766,7 @@ l15node_tx_LDADD = \
   $(LIBSECP256K1)
 #
 
-# bitcoin-wallet binary #
+# l15node-wallet binary #
 l15node_wallet_SOURCES = bitcoin-wallet.cpp
 l15node_wallet_SOURCES += init/bitcoin-wallet.cpp
 l15node_wallet_CPPFLAGS = $(bitcoin_bin_cppflags)
