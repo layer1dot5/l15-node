@@ -20,67 +20,84 @@ BitcoinUnits::BitcoinUnits(QObject *parent):
 
 QList<BitcoinUnit> BitcoinUnits::availableUnits()
 {
-    QList<BitcoinUnit> unitlist;
-    unitlist.append(Unit::L15SR);
-    unitlist.append(Unit::mL15SR);
-    unitlist.append(Unit::uL15SR);
-    unitlist.append(Unit::SAT);
+    QList<BitcoinUnits::Unit> unitlist;
+    unitlist.append(L15SR);
+    unitlist.append(mL15SR);
+    unitlist.append(uL15SR);
+    unitlist.append(SAT);
     return unitlist;
 }
 
 QString BitcoinUnits::longName(Unit unit)
 {
-    switch (unit) {
-    case Unit::L15SR: return QString("L15SR");
-    case Unit::mL15SR: return QString("mL15SR");
-    case Unit::uL15SR: return QString::fromUtf8("µL15SR (bits)");
-    case Unit::SAT: return QString("L15SR'Nano (l15nan)");
-    } // no default case, so the compiler can warn about missing cases
-    assert(false);
+    switch(unit)
+    {
+    case L15SR:
+    case mL15SR:
+    case uL15SR:
+    case SAT:
+        return true;
+    default:
+        return false;
+    }
+}
+
+QString BitcoinUnits::longName(int unit)
+{
+    switch(unit)
+    {
+    case L15SR: return QString("L15SR");
+    case mL15SR: return QString("mL15SR");
+    case uL15SR: return QString::fromUtf8("µL15SR (bits)");
+    case SAT: return QString("L15SR'Nano (l15nan)");
+    default: return QString("???");
+    }
 }
 
 QString BitcoinUnits::shortName(Unit unit)
 {
-    switch (unit) {
-    case Unit::L15SR: return longName(unit);
-    case Unit::mL15SR: return longName(unit);
-    case Unit::uL15SR: return QString("bits");
-    case Unit::SAT: return QString("l15nan");
-    } // no default case, so the compiler can warn about missing cases
-    assert(false);
+    switch(unit)
+    {
+    case uL15SR: return QString::fromUtf8("bits");
+    case SAT: return QString("l15nan");
+    default: return longName(unit);
+    }
 }
 
 QString BitcoinUnits::description(Unit unit)
 {
-    switch (unit) {
-    case Unit::L15SR: return QString("L15's");
-    case Unit::mL15SR: return QString("Milli-L15's (1 / 1" THIN_SP_UTF8 "000)");
-    case Unit::uL15SR: return QString("Micro-L15's (bits) (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-    case Unit::SAT: return QString("Nano-L15's (l15nan) (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-    } // no default case, so the compiler can warn about missing cases
-    assert(false);
+    switch(unit)
+    {
+    case L15SR: return QString("L15's");
+    case mL15SR: return QString("Milli-l15's (1 / 1" THIN_SP_UTF8 "000)");
+    case uL15SR: return QString("Micro-l15's (bits) (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    case SAT: return QString("Nano-L15's (l15nan) (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    default: return QString("???");
+    }
 }
 
 qint64 BitcoinUnits::factor(Unit unit)
 {
-    switch (unit) {
-    case Unit::L15SR: return 100'000'000;
-    case Unit::mL15SR: return 100'000;
-    case Unit::uL15SR: return 100;
-    case Unit::SAT: return 1;
-    } // no default case, so the compiler can warn about missing cases
-    assert(false);
+    switch(unit)
+    {
+    case L15SR: return 100000000;
+    case mL15SR: return 100000;
+    case uL15SR: return 100;
+    case SAT: return 1;
+    default: return 100000000;
+    }
 }
 
 int BitcoinUnits::decimals(Unit unit)
 {
-    switch (unit) {
-    case Unit::L15SR: return 8;
-    case Unit::mL15SR: return 5;
-    case Unit::uL15SR: return 2;
-    case Unit::SAT: return 0;
-    } // no default case, so the compiler can warn about missing cases
-    assert(false);
+    switch(unit)
+    {
+    case L15SR: return 8;
+    case mL15SR: return 5;
+    case uL15SR: return 2;
+    case SAT: return 0;
+    default: return 0;
+    }
 }
 
 QString BitcoinUnits::format(Unit unit, const CAmount& nIn, bool fPlus, SeparatorStyle separators, bool justify)

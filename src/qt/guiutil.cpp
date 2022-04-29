@@ -178,7 +178,8 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
         {
             if(!i->second.isEmpty())
             {
-                if (!BitcoinUnits::parse(BitcoinUnit::L15SR, i->second, &rv.amount)) {
+                if(!BitcoinUnits::parse(BitcoinUnits::L15SR, i->second, &rv.amount))
+                {
                     return false;
                 }
             }
@@ -210,7 +211,7 @@ QString formatBitcoinURI(const SendCoinsRecipient &info)
 
     if (info.amount)
     {
-        ret += QString("?amount=%1").arg(BitcoinUnits::format(BitcoinUnit::L15SR, info.amount, false, BitcoinUnits::SeparatorStyle::NEVER));
+        ret += QString("?amount=%1").arg(BitcoinUnits::format(BitcoinUnits::L15SR, info.amount, false, BitcoinUnits::SeparatorStyle::NEVER));
         paramCount++;
     }
 
@@ -508,7 +509,7 @@ fs::path static StartupShortcutPath()
         return GetSpecialFolderPath(CSIDL_STARTUP) / "L15.lnk";
     if (chain == CBaseChainParams::TESTNET) // Remove this special case when CBaseChainParams::TESTNET = "testnet4"
         return GetSpecialFolderPath(CSIDL_STARTUP) / "L15 (testnet).lnk";
-    return GetSpecialFolderPath(CSIDL_STARTUP) / fs::u8path(strprintf("L15 (%s).lnk", chain));
+    return GetSpecialFolderPath(CSIDL_STARTUP) / strprintf("L15 (%s).lnk", chain);
 }
 
 bool GetStartOnSystemStartup()
@@ -589,7 +590,7 @@ fs::path static GetAutostartFilePath()
     std::string chain = gArgs.GetChainName();
     if (chain == CBaseChainParams::MAIN)
         return GetAutostartDir() / "l15.desktop";
-    return GetAutostartDir() / fs::u8path(strprintf("l15-%s.desktop", chain));
+    return GetAutostartDir() / strprintf("l15-%s.desktop", chain);
 }
 
 bool GetStartOnSystemStartup()
