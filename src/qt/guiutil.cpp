@@ -178,7 +178,7 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
         {
             if(!i->second.isEmpty())
             {
-                if(!BitcoinUnits::parse(BitcoinUnits::L15SR, i->second, &rv.amount))
+                if(!BitcoinUnits::parse(BitcoinUnit::L15SR, i->second, &rv.amount))
                 {
                     return false;
                 }
@@ -211,7 +211,7 @@ QString formatBitcoinURI(const SendCoinsRecipient &info)
 
     if (info.amount)
     {
-        ret += QString("?amount=%1").arg(BitcoinUnits::format(BitcoinUnits::L15SR, info.amount, false, BitcoinUnits::SeparatorStyle::NEVER));
+        ret += QString("?amount=%1").arg(BitcoinUnits::format(BitcoinUnit::L15SR, info.amount, false, BitcoinUnits::SeparatorStyle::NEVER));
         paramCount++;
     }
 
@@ -590,7 +590,7 @@ fs::path static GetAutostartFilePath()
     std::string chain = gArgs.GetChainName();
     if (chain == CBaseChainParams::MAIN)
         return GetAutostartDir() / "l15.desktop";
-    return GetAutostartDir() / strprintf("l15-%s.desktop", chain);
+    return GetAutostartDir() / fs::u8path(strprintf("l15-%s.desktop", chain));
 }
 
 bool GetStartOnSystemStartup()
