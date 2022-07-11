@@ -202,7 +202,7 @@ public:
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 7 * 24 * 60 * 60; // two weeks
         consensus.nPowTargetSpacing = 60;
-        consensus.fPowAllowMinDifficultyBlocks = true;
+        consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 9072; // 90% of 20160
         consensus.nMinerConfirmationWindow = 10080; // nPowTargetTimespan / nPowTargetSpacing
