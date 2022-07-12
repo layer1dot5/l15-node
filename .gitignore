@@ -1,5 +1,14 @@
 *.tar.gz
-
+.idea
+src/qt/l15-qt
+src/l15d
+src/l15
+src/l15-cli
+src/l15-gui
+src/l15-wallet
+src/l15-util
+src/l15-tx
+src/l15-node
 *.exe
 *.pdb
 src/bitcoin
@@ -14,6 +23,7 @@ src/bitcoin-wallet
 src/test/fuzz/fuzz
 src/test/test_bitcoin
 src/qt/test/test_bitcoin-qt
+src/qt/test/test_l15-qt
 
 # autoreconf
 Makefile.in
