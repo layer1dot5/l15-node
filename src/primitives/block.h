@@ -32,10 +32,11 @@ public:
     {
         SetNull();
     }
+    virtual ~CBlockHeader() = default;
 
     SERIALIZE_METHODS(CBlockHeader, obj) { READWRITE(obj.nVersion, obj.hashPrevBlock, obj.hashMerkleRoot, obj.nTime, obj.nBits, obj.nNonce); }
 
-    void SetNull()
+    virtual void SetNull()
     {
         nVersion = 0;
         hashPrevBlock.SetNull();
@@ -56,6 +57,8 @@ public:
     {
         return (int64_t)nTime;
     }
+
+    virtual std::string ToString() const;
 };
 
 
@@ -79,13 +82,15 @@ public:
         *(static_cast<CBlockHeader*>(this)) = header;
     }
 
+    ~CBlock() override = default;
+
     SERIALIZE_METHODS(CBlock, obj)
     {
         READWRITEAS(CBlockHeader, obj);
         READWRITE(obj.vtx);
     }
 
-    void SetNull()
+    void SetNull() override
     {
         CBlockHeader::SetNull();
         vtx.clear();
@@ -104,7 +109,7 @@ public:
         return block;
     }
 
-    std::string ToString() const;
+    std::string ToString() const override;
 };
 
 /** Describes a place in the block chain to another node such that if the

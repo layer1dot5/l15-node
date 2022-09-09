@@ -267,9 +267,10 @@ static RPCHelpMan generatetoaddress()
     const int num_blocks{request.params[0].get_int()};
     const uint64_t max_tries{request.params[2].isNull() ? DEFAULT_MAX_TRIES : request.params[2].get_int()};
 
-    CTxDestination destination = DecodeDestination(request.params[1].get_str());
+    std::string error_msg;
+    CTxDestination destination = DecodeDestination(request.params[1].get_str(), error_msg);
     if (!IsValidDestination(destination)) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error: Invalid address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error: " + error_msg);
     }
 
     NodeContext& node = EnsureAnyNodeContext(request.context);
