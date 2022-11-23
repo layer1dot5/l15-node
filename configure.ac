@@ -266,12 +266,6 @@ if test "$use_asm" = "yes"; then
   AC_DEFINE([USE_ASM], [1], [Define this symbol to build in assembly routines])
 fi
 
-AC_ARG_ENABLE([zmq],
-  [AS_HELP_STRING([--disable-zmq],
-  [disable ZMQ notifications])],
-  [use_zmq=$enableval],
-  [use_zmq=yes])
-
 AC_ARG_WITH([libmultiprocess],
   [AS_HELP_STRING([--with-libmultiprocess=yes|no|auto],
   [Build with libmultiprocess library. (default: auto, i.e. detect with pkg-config)])],
@@ -618,6 +612,8 @@ CXXFLAGS="$TEMP_CXXFLAGS"
 fi
 
 CORE_CPPFLAGS="$CORE_CPPFLAGS -DHAVE_BUILD_INFO"
+
+AX_ZMQ(,[use_zmq=yes],[use_zmq=no])
 
 AC_ARG_WITH([utils],
   [AS_HELP_STRING([--with-utils],
@@ -1584,26 +1580,17 @@ if test "$use_qr" != "no"; then
   BITCOIN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
 fi
 
-dnl ZMQ check
 
 if test "$use_zmq" = "yes"; then
-  PKG_CHECK_MODULES([ZMQ], [libzmq >= 4],
-    AC_DEFINE([ENABLE_ZMQ], [1], [Define to 1 to enable ZMQ functions]),
-    [AC_DEFINE([ENABLE_ZMQ], [0], [Define to 1 to enable ZMQ functions])
-    AC_MSG_WARN([libzmq version 4.x or greater not found, disabling])
-    use_zmq=no])
-else
-  AC_DEFINE_UNQUOTED([ENABLE_ZMQ], [0], [Define to 1 to enable ZMQ functions])
-fi
-
-if test "$use_zmq" = "yes"; then
+  AC_DEFINE(ENABLE_ZMQ, 1, [build with ZMQ subscription module])
   dnl Assume libzmq was built for static linking
   case $host in
     *mingw*)
-      ZMQ_CFLAGS="$ZMQ_CFLAGS -DZMQ_STATIC"
+      ZMQ_CPPFLAGS="$ZMQ_CPPFLAGS -DZMQ_STATIC"
     ;;
   esac
 fi
+
 
 dnl libmultiprocess library check
 
