@@ -185,6 +185,7 @@ TxoutType Solver(const CScript& scriptPubKey, std::vector<std::vector<unsigned c
  * P2PKH, P2SH, P2WPKH, and P2WSH scripts.
  */
 bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet);
+bool ExtractDestination(const CDataTxOut& tx_out, CTxDestination& addressRet);
 
 /**
  * Generate a Bitcoin scriptPubKey for the given CTxDestination. Returns a P2PKH

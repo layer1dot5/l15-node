@@ -237,6 +237,16 @@ TxoutType Solver(const CScript& scriptPubKey, std::vector<std::vector<unsigned c
     return TxoutType::NONSTANDARD;
 }
 
+bool ExtractDestination(const CDataTxOut& tx_out, CTxDestination& addressRet)
+{
+    if (tx_out.mMagicTag & L15_DATA_FLAG) {
+        addressRet = CNoDestination();
+        return false;
+    }
+
+    return ExtractDestination(CTxOut(tx_out).scriptPubKey, addressRet);
+}
+
 bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet)
 {
     std::vector<valtype> vSolutions;

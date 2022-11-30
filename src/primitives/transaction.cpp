@@ -12,6 +12,8 @@
 
 #include <assert.h>
 
+
+
 std::string COutPoint::ToString() const
 {
     return strprintf("COutPoint(%s, %u)", hash.ToString().substr(0,10), n);
@@ -46,15 +48,37 @@ std::string CTxIn::ToString() const
     return str;
 }
 
-CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
-{
-    nValue = nValueIn;
-    scriptPubKey = scriptPubKeyIn;
-}
-
 std::string CTxOut::ToString() const
 {
-    return strprintf("CTxOut(nValue=%d.%08d, scriptPubKey=%s)", nValue / COIN, nValue % COIN, HexStr(scriptPubKey).substr(0, 30));
+    return strprintf("CTxOut(mMagicTag=%s, nValue=%d.%08d, scriptPubKey=%s)", toString(magicTag()), nValue / COIN, nValue % COIN, HexStr(scriptPubKey).substr(0, 30));
+}
+
+CTxOut::CTxOut(const CDataTxOut &dataOut)
+{
+    if (dataOut.mMagicTag & L15_DATA_FLAG) {
+        throw std::runtime_error(strprintf("Cannot convert %s output to coin value output", toString(dataOut.magicTag())));
+    }
+
+    mMagicTag = dataOut.mMagicTag;
+
+    CDataStream s(dataOut.mData, SER_NETWORK, PROTOCOL_VERSION);
+    s >> nValue;
+    s >> scriptPubKey;
+}
+
+CTxOut &CTxOut::operator=(CDataTxOut &dataOut)
+{
+    if (dataOut.mMagicTag & L15_DATA_FLAG) {
+        throw std::runtime_error(strprintf("Cannot convert %s output to coin value output", toString(dataOut.magicTag())));
+    }
+
+    mMagicTag = dataOut.mMagicTag;
+
+    CDataStream s(dataOut.mData, SER_NETWORK, PROTOCOL_VERSION);
+    s >> nValue;
+    s >> scriptPubKey;
+
+    return *this;
 }
 
 CMutableTransaction::CMutableTransaction() : nVersion(CTransaction::CURRENT_VERSION), nLockTime(0) {}
@@ -81,13 +105,19 @@ uint256 CTransaction::ComputeWitnessHash() const
 CTransaction::CTransaction(const CMutableTransaction& tx) : vin(tx.vin), vout(tx.vout), nVersion(tx.nVersion), nLockTime(tx.nLockTime), hash{ComputeHash()}, m_witness_hash{ComputeWitnessHash()} {}
 CTransaction::CTransaction(CMutableTransaction&& tx) : vin(std::move(tx.vin)), vout(std::move(tx.vout)), nVersion(tx.nVersion), nLockTime(tx.nLockTime), hash{ComputeHash()}, m_witness_hash{ComputeWitnessHash()} {}
 
-CAmount CTransaction::GetValueOut() const
+CAmount CTransaction::GetValueOut(L15MagicTag tag) const
 {
+    assert(!(tag | L15_DATA_FLAG));
+
     CAmount nValueOut = 0;
     for (const auto& tx_out : vout) {
-        if (!MoneyRange(tx_out.nValue) || !MoneyRange(nValueOut + tx_out.nValue))
+        if (tx_out.magicTag() != tag)
+            continue;
+
+        CTxOut val_out(tx_out);
+        if (!MoneyRange(val_out.nValue) || !MoneyRange(nValueOut + val_out.nValue))
             throw std::runtime_error(std::string(__func__) + ": value out of range");
-        nValueOut += tx_out.nValue;
+        nValueOut += val_out.nValue;
     }
     assert(MoneyRange(nValueOut));
     return nValueOut;
@@ -114,4 +144,58 @@ std::string CTransaction::ToString() const
     for (const auto& tx_out : vout)
         str += "    " + tx_out.ToString() + "\n";
     return str;
+}
+
+//size_t CTxOut::GetDataLength() const
+//{
+//    switch (mMagicTag) {
+//    L15_SR:
+//    L15_USD:
+//        return sizeof(CAmount) + 32/*size of XOnlyPubKey*/;
+//    L15_UNKNOWN:
+//        return 0;
+//    }
+//    return 0;
+//}
+
+namespace {
+    const static char * const szL15_SR = "L15_SR";
+    const static char * const szL15_USD = "L15_USD";
+    const static char * const szL15_MEMBER_PUBNONCE = "L15_MEMBER_PUBNONCE";
+    const static char * const szL15_UNKNOWN = "UNKNOWN";
+}
+
+
+const char *toString(L15MagicTag tag)
+{
+    switch (tag) {
+    case L15MagicTag::L15_SR: return szL15_SR;
+    case L15MagicTag::L15_USD: return szL15_USD;
+    case L15MagicTag::L15_MEMBER_PUBNONCE: return szL15_MEMBER_PUBNONCE;
+    default: return szL15_UNKNOWN;
+    }
+}
+
+std::string CDataTxOut::ToString() const
+{
+    return strprintf("CTxOut(mMagicTag=%s, nData=%s)", toString(static_cast<L15MagicTag>(mMagicTag)), HexStr(mData).substr(0, 32));
+
+}
+
+CDataTxOut::CDataTxOut(const CTxOut & out) : mMagicTag(out.mMagicTag)
+{
+    CDataStream s(mData, SER_NETWORK, PROTOCOL_VERSION);
+    s << out.nValue;
+    s << out.scriptPubKey;
+}
+
+CDataTxOut &CDataTxOut::operator=(const CTxOut & out)
+{
+    mMagicTag = out.mMagicTag;
+
+    CDataStream s(mData, SER_NETWORK, PROTOCOL_VERSION);
+    s << out.nValue;
+    s << out.scriptPubKey;
+
+    return *this;
 }

@@ -9,10 +9,13 @@
 #include <stdint.h>
 #include <consensus/amount.h>
 #include <script/script.h>
+#include <version.h>
 #include <serialize.h>
+#include <streams.h>
 #include <uint256.h>
 
 #include <tuple>
+#include <sstream>
 
 /**
  * A flag that is ORed into the protocol version to designate that a transaction
@@ -145,35 +148,55 @@ public:
 /** An output of a transaction.  It contains the public key that the next input
  * must be able to sign with to claim it.
  */
+
+const uint16_t L15_DATA_FLAG = 0x8000;
+
+enum L15MagicTag : uint16_t
+{
+    L15_UNKNOWN = 0x0000,
+    L15_SR = 0x0001,
+    L15_USD = 0x0002,
+    L15_MEMBER_PUBNONCE = (0x0003 | L15_DATA_FLAG),
+
+
+};
+
+const char* toString(L15MagicTag tag);
+
+class CDataTxOut;
+
 class CTxOut
 {
 public:
+    uint16_t mMagicTag;
     CAmount nValue;
     CScript scriptPubKey;
 
-    CTxOut()
-    {
-        SetNull();
-    }
+    CTxOut() : mMagicTag(L15MagicTag::L15_UNKNOWN)
+    {}
 
-    CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn);
+    CTxOut(const CDataTxOut& dataOut);
+    CTxOut& operator=(CDataTxOut& dataOut);
 
-    SERIALIZE_METHODS(CTxOut, obj) { READWRITE(obj.nValue, obj.scriptPubKey); }
+    SERIALIZE_METHODS(CTxOut, obj) { READWRITE(obj.mMagicTag, obj.nValue, obj.scriptPubKey); }
 
     void SetNull()
     {
-        nValue = -1;
-        scriptPubKey.clear();
+        mMagicTag = L15MagicTag::L15_UNKNOWN;
     }
 
     bool IsNull() const
     {
-        return (nValue == -1);
+        return (mMagicTag == L15MagicTag::L15_UNKNOWN);
     }
+
+    L15MagicTag magicTag() const
+    { return static_cast<L15MagicTag>(mMagicTag); }
 
     friend bool operator==(const CTxOut& a, const CTxOut& b)
     {
-        return (a.nValue       == b.nValue &&
+        return (a.mMagicTag    == b.mMagicTag &&
+                a.nValue       == b.nValue &&
                 a.scriptPubKey == b.scriptPubKey);
     }
 
@@ -184,6 +207,54 @@ public:
 
     std::string ToString() const;
 };
+
+//template <typename S>
+//S& operator<<(S& stream, L15MagicTag tag)
+//{ return s << static_cast}
+
+class CDataTxOut
+{
+
+public:
+    uint16_t mMagicTag;
+    prevector<32, unsigned char> mData;
+
+    CDataTxOut() : mMagicTag(L15MagicTag::L15_UNKNOWN)
+    {}
+
+    CDataTxOut(const CTxOut& );
+    CDataTxOut& operator= (const CTxOut& );
+
+
+    SERIALIZE_METHODS(CDataTxOut, obj) { READWRITE(obj.mMagicTag, obj.mData); }
+
+    void SetNull()
+    {
+        mMagicTag = L15MagicTag::L15_UNKNOWN;
+    }
+
+    bool IsNull() const
+    {
+        return (mMagicTag == L15MagicTag::L15_UNKNOWN);
+    }
+
+    L15MagicTag magicTag() const
+    { return static_cast<L15MagicTag>(mMagicTag); }
+
+    friend bool operator==(const CDataTxOut& a, const CDataTxOut& b)
+    {
+        return (a.mMagicTag    == b.mMagicTag &&
+                a.mData       == b.mData);
+    }
+
+    friend bool operator!=(const CDataTxOut& a, const CDataTxOut& b)
+    {
+        return !(a == b);
+    }
+
+    std::string ToString() const;
+};
+
 
 struct CMutableTransaction;
 
@@ -288,7 +359,7 @@ public:
     // and bypass the constness. This is safe, as they update the entire
     // structure, including the hash.
     const std::vector<CTxIn> vin;
-    const std::vector<CTxOut> vout;
+    const std::vector<CDataTxOut> vout;
     const int32_t nVersion;
     const uint32_t nLockTime;
 
@@ -323,7 +394,7 @@ public:
     const uint256& GetWitnessHash() const { return m_witness_hash; };
 
     // Return sum of txouts.
-    CAmount GetValueOut() const;
+    CAmount GetValueOut(L15MagicTag tag) const;
 
     /**
      * Get the total transaction size in bytes, including witness data.
@@ -364,7 +435,7 @@ public:
 struct CMutableTransaction
 {
     std::vector<CTxIn> vin;
-    std::vector<CTxOut> vout;
+    std::vector<CDataTxOut> vout;
     int32_t nVersion;
     uint32_t nLockTime;
 

@@ -896,7 +896,7 @@ void CWallet::SetSpentKeyState(WalletBatch& batch, const uint256& hash, unsigned
     if (!srctx) return;
 
     CTxDestination dst;
-    if (ExtractDestination(srctx->tx->vout[n].scriptPubKey, dst)) {
+    if (ExtractDestination(srctx->tx->vout[n], dst)) {
         if (IsMine(dst)) {
             if (used != IsAddressUsed(dst)) {
                 if (used) {
@@ -915,29 +915,11 @@ bool CWallet::IsSpentKey(const uint256& hash, unsigned int n) const
     if (srctx) {
         assert(srctx->tx->vout.size() > n);
         CTxDestination dest;
-        if (!ExtractDestination(srctx->tx->vout[n].scriptPubKey, dest)) {
+        if (!ExtractDestination(srctx->tx->vout[n], dest)) {
             return false;
         }
         if (IsAddressUsed(dest)) {
             return true;
-        }
-        if (IsLegacy()) {
-            LegacyScriptPubKeyMan* spk_man = GetLegacyScriptPubKeyMan();
-            assert(spk_man != nullptr);
-            for (const auto& keyid : GetAffectedKeys(srctx->tx->vout[n].scriptPubKey, *spk_man)) {
-                WitnessV0KeyHash wpkh_dest(keyid);
-                if (IsAddressUsed(wpkh_dest)) {
-                    return true;
-                }
-                ScriptHash sh_wpkh_dest(GetScriptForDestination(wpkh_dest));
-                if (IsAddressUsed(sh_wpkh_dest)) {
-                    return true;
-                }
-                PKHash pkh_dest(keyid);
-                if (IsAddressUsed(pkh_dest)) {
-                    return true;
-                }
-            }
         }
     }
     return false;
@@ -1378,16 +1360,17 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter) const
             const CWalletTx& prev = (*mi).second;
             if (txin.prevout.n < prev.tx->vout.size())
                 if (IsMine(prev.tx->vout[txin.prevout.n]) & filter)
-                    return prev.tx->vout[txin.prevout.n].nValue;
+                    return CTxOut(prev.tx->vout[txin.prevout.n]).nValue;
         }
     }
     return 0;
 }
 
-isminetype CWallet::IsMine(const CTxOut& txout) const
+isminetype CWallet::IsMine(const CDataTxOut& txout) const
 {
     AssertLockHeld(cs_wallet);
-    return IsMine(txout.scriptPubKey);
+    if (txout.magicTag() & L15_DATA_FLAG) return ISMINE_NO;
+    return IsMine(CTxOut(txout).scriptPubKey);
 }
 
 isminetype CWallet::IsMine(const CTxDestination& dest) const
@@ -2335,7 +2318,7 @@ void CWallet::MarkDestinationsDirty(const std::set<CTxDestination>& destinations
         if (wtx.m_is_cache_empty) continue;
         for (unsigned int i = 0; i < wtx.tx->vout.size(); i++) {
             CTxDestination dst;
-            if (ExtractDestination(wtx.tx->vout[i].scriptPubKey, dst) && destinations.count(dst)) {
+            if (ExtractDestination(wtx.tx->vout[i], dst) && destinations.count(dst)) {
                 wtx.MarkDirty();
                 break;
             }

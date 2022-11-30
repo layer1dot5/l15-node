@@ -226,7 +226,7 @@ void CachedTxGetAmounts(const CWallet& wallet, const CWalletTx& wtx,
     CAmount nDebit = CachedTxGetDebit(wallet, wtx, filter);
     if (nDebit > 0) // debit>0 means we signed/sent this transaction
     {
-        CAmount nValueOut = wtx.tx->GetValueOut();
+        CAmount nValueOut = wtx.tx->GetValueOut(L15_SR);
         nFee = nDebit - nValueOut;
     }
 
@@ -234,7 +234,10 @@ void CachedTxGetAmounts(const CWallet& wallet, const CWalletTx& wtx,
     // Sent/received.
     for (unsigned int i = 0; i < wtx.tx->vout.size(); ++i)
     {
-        const CTxOut& txout = wtx.tx->vout[i];
+        if (wtx.tx->vout[i].magicTag() != L15_SR)
+            continue;
+
+        const CTxOut txout(wtx.tx->vout[i]);
         isminetype fIsMine = wallet.IsMine(txout);
         // Only need to handle txouts if AT LEAST one of these is true:
         //   1) they debit from us (sent)

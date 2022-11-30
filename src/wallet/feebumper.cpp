@@ -84,7 +84,7 @@ static feebumper::Result CheckFeeRate(const CWallet& wallet, const CWalletTx& wt
 
     // Given old total fee and transaction size, calculate the old feeRate
     isminefilter filter = wallet.GetLegacyScriptPubKeyMan() && wallet.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS) ? ISMINE_WATCH_ONLY : ISMINE_SPENDABLE;
-    CAmount old_fee = CachedTxGetDebit(wallet, wtx, filter) - wtx.tx->GetValueOut();
+    CAmount old_fee = CachedTxGetDebit(wallet, wtx, filter) - wtx.tx->GetValueOut(L15_SR);
     const int64_t txSize = GetVirtualTransactionSize(*(wtx.tx));
     CFeeRate nOldFeeRate(old_fee, txSize);
     // Min total fee is old fee + relay fee
@@ -176,7 +176,8 @@ Result CreateRateBumpTransaction(CWallet& wallet, const uint256& txid, const CCo
 
     // Fill in recipients(and preserve a single change key if there is one)
     std::vector<CRecipient> recipients;
-    for (const auto& output : wtx.tx->vout) {
+    for (const auto& o : wtx.tx->vout) {
+        CTxOut output(o);
         if (!OutputIsChange(wallet, output)) {
             CRecipient recipient = {output.scriptPubKey, output.nValue, false};
             recipients.push_back(recipient);
@@ -188,7 +189,7 @@ Result CreateRateBumpTransaction(CWallet& wallet, const uint256& txid, const CCo
     }
 
     isminefilter filter = wallet.GetLegacyScriptPubKeyMan() && wallet.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS) ? ISMINE_WATCH_ONLY : ISMINE_SPENDABLE;
-    old_fee = CachedTxGetDebit(wallet, wtx, filter) - wtx.tx->GetValueOut();
+    old_fee = CachedTxGetDebit(wallet, wtx, filter) - wtx.tx->GetValueOut(L15_SR);
 
     if (coin_control.m_feerate) {
         // The user provided a feeRate argument.

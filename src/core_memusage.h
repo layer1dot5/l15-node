@@ -25,8 +25,8 @@ static inline size_t RecursiveDynamicUsage(const CTxIn& in) {
     return mem;
 }
 
-static inline size_t RecursiveDynamicUsage(const CTxOut& out) {
-    return RecursiveDynamicUsage(out.scriptPubKey);
+static inline size_t RecursiveDynamicUsage(const CDataTxOut& out) {
+    return memusage::DynamicUsage(out.mData);
 }
 
 static inline size_t RecursiveDynamicUsage(const CTransaction& tx) {
@@ -34,7 +34,7 @@ static inline size_t RecursiveDynamicUsage(const CTransaction& tx) {
     for (std::vector<CTxIn>::const_iterator it = tx.vin.begin(); it != tx.vin.end(); it++) {
         mem += RecursiveDynamicUsage(*it);
     }
-    for (std::vector<CTxOut>::const_iterator it = tx.vout.begin(); it != tx.vout.end(); it++) {
+    for (std::vector<CDataTxOut>::const_iterator it = tx.vout.begin(); it != tx.vout.end(); it++) {
         mem += RecursiveDynamicUsage(*it);
     }
     return mem;
@@ -45,7 +45,7 @@ static inline size_t RecursiveDynamicUsage(const CMutableTransaction& tx) {
     for (std::vector<CTxIn>::const_iterator it = tx.vin.begin(); it != tx.vin.end(); it++) {
         mem += RecursiveDynamicUsage(*it);
     }
-    for (std::vector<CTxOut>::const_iterator it = tx.vout.begin(); it != tx.vout.end(); it++) {
+    for (std::vector<CDataTxOut>::const_iterator it = tx.vout.begin(); it != tx.vout.end(); it++) {
         mem += RecursiveDynamicUsage(*it);
     }
     return mem;
