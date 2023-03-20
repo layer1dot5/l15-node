@@ -48,7 +48,7 @@ AM_INIT_AUTOMAKE([1.13 no-define subdir-objects foreign])
 AM_MAINTAINER_MODE([enable])
 
 dnl make the compilation flags quiet unless V=1 is used
-AM_SILENT_RULES([yes])
+AM_SILENT_RULES([no])
 
 dnl Compiler checks (here before libtool).
 if test "${CXXFLAGS+set}" = "set"; then
@@ -982,10 +982,10 @@ fi
 
 AC_CHECK_HEADERS([endian.h sys/endian.h byteswap.h stdio.h stdlib.h unistd.h strings.h sys/types.h sys/stat.h sys/select.h sys/prctl.h sys/sysctl.h vm/vm_param.h sys/vmmeter.h sys/resources.h])
 
-AC_CHECK_DECLS([getifaddrs, freeifaddrs],[CHECK_SOCKET],,
-    [#include <sys/types.h>
-    #include <ifaddrs.h>]
-)
+#AC_CHECK_DECLS([getifaddrs, freeifaddrs],[CHECK_SOCKET],,
+#    [#include <sys/types.h>
+#    #include <ifaddrs.h>]
+#)
 
 dnl These are used for daemonization in l15noded
 AC_CHECK_DECLS([fork])
@@ -1654,10 +1654,11 @@ AC_MSG_RESULT($build_l15_util)
 
 AC_MSG_CHECKING([whether to build experimental l15node-chainstate])
 if test "$build_experimental_kernel_lib" = "no"; then
+if test "$build_l15_chainstate" = "yes"; then
 AC_MSG_ERROR([experimental l15node-chainstate cannot be built without the experimental bitcoinkernel library. Use --with-experimental-kernel-lib]);
-else
-  AM_CONDITIONAL([BUILD_BITCOIN_CHAINSTATE], [test $build_l15_chainstate = "yes"])
 fi
+fi
+AM_CONDITIONAL([BUILD_BITCOIN_CHAINSTATE], [test $build_l15_chainstate = "yes"])
 AC_MSG_RESULT($build_l15_chainstate)
 
 AC_MSG_CHECKING([whether to build libraries])
