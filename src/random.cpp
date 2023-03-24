@@ -43,7 +43,9 @@
 
 [[noreturn]] static void RandFailure()
 {
+#ifndef __EMSCRIPTEN__
     LogPrintf("Failed to read randomness, aborting\n");
+#endif
     std::abort();
 }
 
@@ -518,7 +520,10 @@ static void SeedPeriodic(CSHA512& hasher, RNGState& rng) noexcept
     // Dynamic environment data (performance monitoring, ...)
     auto old_size = hasher.Size();
     RandAddDynamicEnv(hasher);
+
+#ifndef __EMSCRIPTEN__
     LogPrint(BCLog::RAND, "Feeding %i bytes of dynamic environment data into RNG\n", hasher.Size() - old_size);
+#endif
 
     // Strengthen for 10 ms
     SeedStrengthen(hasher, rng, 10000);
@@ -538,7 +543,9 @@ static void SeedStartup(CSHA512& hasher, RNGState& rng) noexcept
 
     // Static environment data
     RandAddStaticEnv(hasher);
+#ifndef __EMSCRIPTEN__
     LogPrint(BCLog::RAND, "Feeding %i bytes of environment data into RNG\n", hasher.Size() - old_size);
+#endif
 
     // Strengthen for 100 ms
     SeedStrengthen(hasher, rng, 100000);

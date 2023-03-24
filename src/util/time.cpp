@@ -13,7 +13,9 @@
 #include <util/check.h>
 
 #include <atomic>
+#ifndef __EMSCRIPTEN__
 #include <boost/date_time/posix_time/posix_time.hpp>
+#endif
 #include <ctime>
 #include <thread>
 
@@ -148,6 +150,7 @@ std::string FormatISO8601Date(int64_t nTime) {
     return strprintf("%04i-%02i-%02i", ts.tm_year + 1900, ts.tm_mon + 1, ts.tm_mday);
 }
 
+#ifndef __EMSCRIPTEN__
 int64_t ParseISO8601DateTime(const std::string& str)
 {
     static const boost::posix_time::ptime epoch = boost::posix_time::from_time_t(0);
@@ -161,6 +164,7 @@ int64_t ParseISO8601DateTime(const std::string& str)
         return 0;
     return (ptime - epoch).total_seconds();
 }
+#endif
 
 struct timeval MillisToTimeval(int64_t nTimeout)
 {
