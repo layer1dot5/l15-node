@@ -635,7 +635,7 @@ libbitcoin_common_a_SOURCES = \
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
 # sanity checks are linked.
-libbitcoin_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -fPIC
+libbitcoin_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -I$(srcdir)/$(UNIVALUE_INCLUDE_DIR_INT) -fPIC
 libbitcoin_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -fPIC
 libbitcoin_util_a_SOURCES = \
   chainparamsbase.cpp \
@@ -674,6 +674,7 @@ libbitcoin_util_a_SOURCES = \
   util/string.cpp \
   util/syscall_sandbox.cpp \
   util/tokenpipe.cpp \
+  $(libbitcoin_common_a_SOURCES) \
   $(BITCOIN_CORE_H)
 
 if USE_LIBEVENT
