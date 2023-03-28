@@ -556,23 +556,12 @@ crypto_libbitcoin_crypto_arm_shani_la_SOURCES = crypto/sha256_arm_shani.cpp
 libbitcoin_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -fPIC
 libbitcoin_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -fPIC
 libbitcoin_consensus_a_SOURCES = \
-  arith_uint256.cpp \
-  arith_uint256.h \
   consensus/amount.h \
-  consensus/merkle.cpp \
-  consensus/merkle.h \
-  consensus/params.h \
-  consensus/tx_check.cpp \
-  consensus/validation.h \
   hash.cpp \
   hash.h \
   prevector.h \
-  primitives/block.cpp \
-  primitives/block.h \
   primitives/transaction.cpp \
   primitives/transaction.h \
-  pubkey.cpp \
-  pubkey.h \
   script/bitcoinconsensus.cpp \
   script/interpreter.cpp \
   script/interpreter.h \
@@ -589,6 +578,19 @@ libbitcoin_consensus_a_SOURCES = \
   util/strencodings.h \
   version.h
 
+#  arith_uint256.cpp
+#  arith_uint256.h
+#  primitives/block.cpp \
+#  primitives/block.h \
+#  consensus/merkle.cpp \
+#  consensus/merkle.h \
+#  consensus/params.h \
+#  consensus/tx_check.cpp \
+#  consensus/validation.h \
+#  pubkey.cpp \
+#  pubkey.h
+
+
 # common: shared between l15noded, and l15node-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)  -fPIC
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)  -fPIC
@@ -601,36 +603,37 @@ libbitcoin_common_a_SOURCES = \
   chainparams.cpp \
   coins.cpp \
   common/bloom.cpp \
-  compressor.cpp \
-  core_read.cpp \
-  core_write.cpp \
-  deploymentinfo.cpp \
-  external_signer.cpp \
-  init/common.cpp \
-  key.cpp \
-  key_io.cpp \
-  merkleblock.cpp \
-  net_types.cpp \
-  netaddress.cpp \
-  netbase.cpp \
-  net_permissions.cpp \
-  outputtype.cpp \
-  policy/feerate.cpp \
-  policy/policy.cpp \
-  protocol.cpp \
-  psbt.cpp \
-  rpc/rawtransaction_util.cpp \
-  rpc/external_signer.cpp \
-  rpc/util.cpp \
-  scheduler.cpp \
-  script/descriptor.cpp \
-  script/miniscript.cpp \
-  script/sign.cpp \
-  script/signingprovider.cpp \
-  script/standard.cpp \
-  warnings.cpp \
-  util/time.cpp \
-  $(BITCOIN_CORE_H)
+  compressor.cpp
+
+#  util/time.cpp
+#  core_read.cpp \
+#  core_write.cpp \
+#  deploymentinfo.cpp \
+#  external_signer.cpp \
+#  init/common.cpp \
+#  key.cpp \
+#  key_io.cpp \
+#  merkleblock.cpp \
+#  net_types.cpp \
+#  netaddress.cpp \
+#  netbase.cpp \
+#  net_permissions.cpp \
+#  outputtype.cpp \
+#  policy/feerate.cpp \
+#  policy/policy.cpp \
+#  protocol.cpp \
+#  psbt.cpp \
+#  rpc/rawtransaction_util.cpp \
+#  rpc/external_signer.cpp \
+#  rpc/util.cpp \
+#  scheduler.cpp \
+#  script/descriptor.cpp \
+#  script/miniscript.cpp \
+#  script/sign.cpp \
+#  script/signingprovider.cpp \
+#  script/standard.cpp \
+#  warnings.cpp \
+#  $(BITCOIN_CORE_H)
 
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
@@ -944,7 +947,7 @@ if BUILD_BITCOIN_LIBS
 lib_LTLIBRARIES += $(LIBBITCOINCONSENSUS)
 
 include_HEADERS = script/bitcoinconsensus.h
-libbitcoinconsensus_la_SOURCES = support/cleanse.cpp $(crypto_libbitcoin_crypto_base_la_SOURCES) $(libbitcoin_consensus_a_SOURCES) $(libbitcoin_common_a_SOURCES)
+libbitcoinconsensus_la_SOURCES = support/cleanse.cpp crypto/sha256.cpp crypto/sha512.cpp $(libbitcoin_consensus_a_SOURCES) $(libbitcoin_common_a_SOURCES)
 
 libbitcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
 libbitcoinconsensus_la_LIBADD = $(LIBSECP256K1)
