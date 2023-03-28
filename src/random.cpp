@@ -18,6 +18,7 @@
 #include <span.h>
 #include <sync.h>     // for Mutex
 #ifndef __EMSCRIPTEN__
+#include <logging.h>
 #include <util/time.h> // for GetTimeMicros()
 #include <thread>
 #endif

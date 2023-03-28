@@ -578,24 +578,29 @@ libbitcoin_consensus_a_SOURCES = \
   util/strencodings.h \
   version.h
 
-#  arith_uint256.cpp
-#  arith_uint256.h
-#  primitives/block.cpp \
-#  primitives/block.h \
-#  consensus/merkle.cpp \
-#  consensus/merkle.h \
-#  consensus/params.h \
-#  consensus/tx_check.cpp \
-#  consensus/validation.h \
-#  pubkey.cpp \
-#  pubkey.h
+if !WASM_BIND
 
+libbitcoin_consensus_a_SOURCES += \
+  arith_uint256.cpp \
+  arith_uint256.h \
+  consensus/merkle.cpp \
+  consensus/merkle.h \
+  consensus/params.h \
+  consensus/tx_check.cpp \
+  consensus/validation.h \
+  primitives/block.cpp \
+  primitives/block.h \
+  pubkey.cpp \
+  pubkey.h
+
+endif
 
 # common: shared between l15noded, and l15node-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)  -fPIC
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)  -fPIC
 libbitcoin_common_a_SOURCES = \
   support/lockedpool.cpp \
+  support/cleanse.cpp \
   random.cpp \
   randomenv.cpp \
   base58.cpp \
@@ -603,37 +608,41 @@ libbitcoin_common_a_SOURCES = \
   chainparams.cpp \
   coins.cpp \
   common/bloom.cpp \
-  compressor.cpp
+  compressor.cpp \
+  $(BITCOIN_CORE_H)
 
-#  util/time.cpp
-#  core_read.cpp \
-#  core_write.cpp \
-#  deploymentinfo.cpp \
-#  external_signer.cpp \
-#  init/common.cpp \
-#  key.cpp \
-#  key_io.cpp \
-#  merkleblock.cpp \
-#  net_types.cpp \
-#  netaddress.cpp \
-#  netbase.cpp \
-#  net_permissions.cpp \
-#  outputtype.cpp \
-#  policy/feerate.cpp \
-#  policy/policy.cpp \
-#  protocol.cpp \
-#  psbt.cpp \
-#  rpc/rawtransaction_util.cpp \
-#  rpc/external_signer.cpp \
-#  rpc/util.cpp \
-#  scheduler.cpp \
-#  script/descriptor.cpp \
-#  script/miniscript.cpp \
-#  script/sign.cpp \
-#  script/signingprovider.cpp \
-#  script/standard.cpp \
-#  warnings.cpp \
-#  $(BITCOIN_CORE_H)
+if !WASM_BIND
+
+libbitcoin_common_a_SOURCES += \
+  core_read.cpp \
+  core_write.cpp \
+  deploymentinfo.cpp \
+  external_signer.cpp \
+  init/common.cpp \
+  key.cpp \
+  key_io.cpp \
+  merkleblock.cpp \
+  net_types.cpp \
+  netaddress.cpp \
+  netbase.cpp \
+  net_permissions.cpp \
+  outputtype.cpp \
+  policy/feerate.cpp \
+  policy/policy.cpp \
+  protocol.cpp \
+  psbt.cpp \
+  rpc/rawtransaction_util.cpp \
+  rpc/external_signer.cpp \
+  rpc/util.cpp \
+  scheduler.cpp \
+  script/descriptor.cpp \
+  script/miniscript.cpp \
+  script/sign.cpp \
+  script/signingprovider.cpp \
+  script/standard.cpp \
+  warnings.cpp
+
+endif
 
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
@@ -650,7 +659,6 @@ libbitcoin_util_a_SOURCES = \
   interfaces/init.cpp \
   logging.cpp \
   rpc/request.cpp \
-  support/cleanse.cpp \
   sync.cpp \
   threadinterrupt.cpp \
   util/asmap.cpp \
@@ -676,6 +684,7 @@ libbitcoin_util_a_SOURCES = \
   util/strencodings.cpp \
   util/string.cpp \
   util/syscall_sandbox.cpp \
+  util/time.cpp \
   util/tokenpipe.cpp \
   $(BITCOIN_CORE_H)
 
@@ -745,6 +754,7 @@ l15node_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
+  $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_CRYPTO)
 
 l15node_cli_LDADD += $(EVENT_LIBS)
@@ -905,7 +915,7 @@ libbitcoinkernel_la_SOURCES = \
   shutdown.cpp \
   signet.cpp \
   support/cleanse.cpp \
-  support/lockedpool.cpp \
+  support/lockedpool.cpp \common
   sync.cpp \
   threadinterrupt.cpp \
   timedata.cpp \
@@ -946,7 +956,13 @@ if BUILD_BITCOIN_LIBS
 lib_LTLIBRARIES += $(LIBBITCOINCONSENSUS)
 
 include_HEADERS = script/bitcoinconsensus.h
-libbitcoinconsensus_la_SOURCES = support/cleanse.cpp crypto/sha256.cpp crypto/sha512.cpp $(libbitcoin_consensus_a_SOURCES) $(libbitcoin_common_a_SOURCES)
+
+libbitcoinconsensus_la_SOURCES = $(libbitcoin_consensus_a_SOURCES) $(libbitcoin_common_a_SOURCES)
+if WASM_BIND
+libbitcoinconsensus_la_SOURCES += crypto/sha256.cpp crypto/sha512.cpp
+else
+libbitcoinconsensus_la_SOURCES += $(crypto_libbitcoin_crypto_base_la_SOURCES)
+endif
 
 libbitcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
 libbitcoinconsensus_la_LIBADD = $(LIBSECP256K1)
