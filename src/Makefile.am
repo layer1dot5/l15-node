@@ -578,7 +578,7 @@ libbitcoin_consensus_a_SOURCES = \
   util/strencodings.h \
   version.h
 
-if !WASM_BIND
+if !INSCRIBEIT_PLUGIN
 
 libbitcoin_consensus_a_SOURCES += \
   arith_uint256.cpp \
@@ -611,7 +611,7 @@ libbitcoin_common_a_SOURCES = \
   compressor.cpp \
   $(BITCOIN_CORE_H)
 
-if !WASM_BIND
+if !INSCRIBEIT_PLUGIN
 
 libbitcoin_common_a_SOURCES += \
   core_read.cpp \
@@ -959,7 +959,7 @@ lib_LTLIBRARIES += $(LIBBITCOINCONSENSUS)
 include_HEADERS = script/bitcoinconsensus.h
 
 libbitcoinconsensus_la_SOURCES = $(libbitcoin_consensus_a_SOURCES) $(libbitcoin_common_a_SOURCES)
-if WASM_BIND
+if INSCRIBEIT_PLUGIN
 libbitcoinconsensus_la_SOURCES += crypto/sha256.cpp crypto/sha512.cpp
 else
 libbitcoinconsensus_la_SOURCES += $(crypto_libbitcoin_crypto_base_la_SOURCES)

@@ -342,8 +342,19 @@ AC_ARG_ENABLE([wasm-bind],
               ],
               [wasm_bind=no])
 
-AM_CONDITIONAL([WASM_BIND], [test "$wasm_bind" = "yes"])
+AC_ARG_ENABLE([pybind],
+              [AS_HELP_STRING([--enable-pybind], [Enable plugin API binding for Python module via SWIG (disabled by default)])],
+              [
+                if test "$enableval" = "yes"; then
+                    with_pybind=yes
+                fi
+              ],
+              [with_pybind=no])
 
+AM_CONDITIONAL([WASM_BIND], [test "$wasm_bind" = "yes"])
+AM_CONDITIONAL([BUILD_PYTHON_PLUGIN], [test "$with_pybind" = "yes"])
+
+AM_CONDITIONAL([INSCRIBEIT_PLUGIN], [test "$with_pybind" = "yes" -o "$wasm_bind" = "yes"])
 
 AC_LANG_PUSH([C++])
 
@@ -699,6 +710,11 @@ AC_ARG_ENABLE([wasm-bind],
               [wasm_bind=$enableval],
               [wasm_bind=no])
 
+AC_ARG_ENABLE([pybind],
+              [AS_HELP_STRING([--enable-pybind], [Enable binding for Python via SWIG (disabled by default)])],
+              [with_pybind=$enableval],
+              [with_pybind=no])
+
 
 case $host in
   *mingw*)
@@ -904,7 +920,7 @@ dnl Check for endianness
 AC_C_BIGENDIAN
 
 dnl Check for pthread compile/link requirements
-if test "$wasm_bind" != "yes"; then
+if test "$wasm_bind" != "yes" "$with_pybind" != "yes"; then
 AX_PTHREAD
 fi
 
