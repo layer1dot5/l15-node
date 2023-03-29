@@ -16,6 +16,11 @@
 // Allocator that locks its contents from being paged
 // out of memory and clears its contents before deletion.
 //
+#ifdef __EMSCRIPTEN__
+
+#define secure_allocator std::allocator
+
+#else
 template <typename T>
 struct secure_allocator : public std::allocator<T> {
     using base = std::allocator<T>;
@@ -55,7 +60,10 @@ struct secure_allocator : public std::allocator<T> {
     }
 };
 
+#endif
+
 // This is exactly like std::string, but with a custom allocator.
 typedef std::basic_string<char, std::char_traits<char>, secure_allocator<char> > SecureString;
+
 
 #endif // BITCOIN_SUPPORT_ALLOCATORS_SECURE_H

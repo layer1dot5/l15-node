@@ -56,7 +56,13 @@ if test "${CXXFLAGS+set}" = "set"; then
 else
   CXXFLAGS_overridden=no
 fi
+if test "${CFLAGS+set}" = "set"; then
+  CFLAGS_overridden=yes
+else
+  CFLAGS_overridden=no
+fi
 AC_PROG_CXX
+AC_PROG_CC
 
 dnl By default, libtool for mingw refuses to link static libs into a dll for
 dnl fear of mixing pic/non-pic objects, and import/export complications. Since
@@ -327,6 +333,18 @@ AC_ARG_ENABLE([lto],
     [enable_lto=$enableval],
     [enable_lto=no])
 
+AC_ARG_ENABLE([wasm-bind],
+              [AS_HELP_STRING([--enable-wasm-bind], [Enable plugin API binding for WebAssembly (disabled by default)])],
+              [
+                if test "$enableval" = "yes"; then
+                    wasm_bind=yes
+                fi
+              ],
+              [wasm_bind=no])
+
+AM_CONDITIONAL([WASM_BIND], [test "$wasm_bind" = "yes"])
+
+
 AC_LANG_PUSH([C++])
 
 dnl Check for a flag to turn compiler warnings into errors. This is helpful for checks which may
@@ -374,6 +392,13 @@ if test "$enable_debug" = "yes"; then
   AX_CHECK_PREPROC_FLAG([-DDEBUG_LOCKORDER], [DEBUG_CPPFLAGS="$DEBUG_CPPFLAGS -DDEBUG_LOCKORDER"], [], [$CXXFLAG_WERROR])
   AX_CHECK_PREPROC_FLAG([-DABORT_ON_FAILED_ASSUME], [DEBUG_CPPFLAGS="$DEBUG_CPPFLAGS -DABORT_ON_FAILED_ASSUME"], [], [$CXXFLAG_WERROR])
   AX_CHECK_COMPILE_FLAG([-ftrapv], [DEBUG_CXXFLAGS="$DEBUG_CXXFLAGS -ftrapv"], [], [$CXXFLAG_WERROR])
+else
+  if test "$CXXFLAGS_overridden" = "no"; then
+      CXXFLAGS=""
+  fi
+  if test "$CFLAGS_overridden" = "no"; then
+      CFLAGS=""
+  fi
 fi
 
 if test "$enable_lto" = "yes"; then
@@ -669,6 +694,12 @@ AC_ARG_WITH([daemon],
   [build_l15d=$withval],
   [build_l15d=yes])
 
+AC_ARG_ENABLE([wasm-bind],
+              [AS_HELP_STRING([--enable-wasm-bind], [Enable binding for WebAssembly (disabled by default)])],
+              [wasm_bind=$enableval],
+              [wasm_bind=no])
+
+
 case $host in
   *mingw*)
      TARGET_OS=windows
@@ -873,7 +904,9 @@ dnl Check for endianness
 AC_C_BIGENDIAN
 
 dnl Check for pthread compile/link requirements
+if test "$wasm_bind" != "yes"; then
 AX_PTHREAD
+fi
 
 dnl The following macro will add the necessary defines to bitcoin-config.h, but
 dnl they also need to be passed down to any subprojects. Pull the results out of

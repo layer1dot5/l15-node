@@ -13,18 +13,19 @@
 #include <compat.h> // for Windows API
 #include <wincrypt.h>
 #endif
-#include <logging.h>
 #include <randomenv.h>
 #include <support/allocators/secure.h>
 #include <span.h>
 #include <sync.h>     // for Mutex
+#ifndef __EMSCRIPTEN__
+#include <logging.h>
 #include <util/time.h> // for GetTimeMicros()
-
+#include <thread>
+#endif
 #include <cmath>
 #include <stdlib.h>
-#include <thread>
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__EMSCRIPTEN__)
 #include <fcntl.h>
 #include <sys/time.h>
 #endif
@@ -33,12 +34,27 @@
 #include <sys/syscall.h>
 #include <linux/random.h>
 #endif
-#if defined(HAVE_GETENTROPY_RAND) && defined(MAC_OSX)
+#if defined(HAVE_GETENTROPY_RAND) && (defined(MAC_OSX) || defined(__EMSCRIPTEN__))
 #include <unistd.h>
 #include <sys/random.h>
 #endif
 #ifdef HAVE_SYSCTL_ARND
 #include <sys/sysctl.h>
+#endif
+
+#ifdef __EMSCRIPTEN__
+extern "C" double emscripten_get_now(void);
+int64_t GetTimeMicros()
+{
+    union {
+        double fractional;
+        int64_t integer;
+    } value;
+    value.fractional = emscripten_get_now();
+
+    return value.integer;
+}
+
 #endif
 
 [[noreturn]] static void RandFailure()
@@ -63,6 +79,8 @@ static inline int64_t GetPerformanceCounter() noexcept
     uint64_t r1 = 0, r2 = 0;
     __asm__ volatile ("rdtsc" : "=a"(r1), "=d"(r2)); // Constrain r1 to rax and r2 to rdx.
     return (r2 << 32) | r1;
+#elif defined(__EMSCRIPTEN__)
+    return GetTimeMicros();
 #else
     // Fall back to using C++11 clock (usually microsecond or nanosecond precision)
     return std::chrono::high_resolution_clock::now().time_since_epoch().count();
@@ -251,7 +269,7 @@ static void Strengthen(const unsigned char (&seed)[32], int microseconds, CSHA51
     memory_cleanse(buffer, sizeof(buffer));
 }
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__EMSCRIPTEN__)
 /** Fallback: get 32 bytes of system entropy from /dev/urandom. The most
  * compatible way to get cryptographic randomness on UNIX-ish platforms.
  */
@@ -316,14 +334,13 @@ void GetOSRand(unsigned char *ent32)
     arc4random_buf(ent32, NUM_OS_RANDOM_BYTES);
     // Silence a compiler warning about unused function.
     (void)GetDevURandom;
-#elif defined(HAVE_GETENTROPY_RAND) && defined(MAC_OSX)
+#elif defined(HAVE_GETENTROPY_RAND) && (defined(MAC_OSX) || defined(__EMSCRIPTEN__))
     /* getentropy() is available on macOS 10.12 and later.
      */
     if (getentropy(ent32, NUM_OS_RANDOM_BYTES) != 0) {
         RandFailure();
     }
     // Silence a compiler warning about unused function.
-    (void)GetDevURandom;
 #elif defined(HAVE_SYSCTL_ARND)
     /* FreeBSD, NetBSD and similar. It is possible for the call to return less
      * bytes than requested, so need to read in a loop.
@@ -719,9 +736,11 @@ void RandomInit()
 
     ReportHardwareRand();
 }
+#ifndef __EMSCRIPTEN__
 
 std::chrono::microseconds GetExponentialRand(std::chrono::microseconds now, std::chrono::seconds average_interval)
 {
     double unscaled = -std::log1p(GetRand(uint64_t{1} << 48) * -0.0000000000000035527136788 /* -1/2^48 */);
-    return now + std::chrono::duration_cast<std::chrono::microseconds>(unscaled * average_interval + 0.5us);
+    return now + std::chrono::duration_cast<std::chrono::microseconds>(unscaled * average_interval);
 }
+#endif
