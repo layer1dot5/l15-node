@@ -336,18 +336,6 @@ AC_ARG_ENABLE([lto],
     [enable_lto=$enableval],
     [enable_lto=no])
 
-AC_ARG_ENABLE([wasm-bind],
-              [AS_HELP_STRING([--enable-wasm-bind], [Enable plugin API binding for WebAssembly (disabled by default)])],
-              [
-                if test "$enableval" = "yes"; then
-                    wasm_bind=yes
-                fi
-              ],
-              [wasm_bind=no])
-
-AM_CONDITIONAL([WASM_BIND], [test "$wasm_bind" = "yes"])
-
-
 AC_LANG_PUSH([C++])
 
 dnl Check for a flag to turn compiler warnings into errors. This is helpful for checks which may
@@ -706,6 +694,14 @@ AC_ARG_ENABLE([wasm-bind],
               [wasm_bind=$enableval],
               [wasm_bind=no])
 
+AC_ARG_ENABLE([pybind],
+              [AS_HELP_STRING([--enable-pybind], [Enable binding for Python using SWIG (disabled by default)])],
+              [pybind=$enableval],
+              [pybind=no])
+
+AM_CONDITIONAL([WASM_BIND], [test "$wasm_bind" = "yes"])
+AM_CONDITIONAL([PYTHON_BIND], [test "$pybind" = "yes"])
+AM_CONDITIONAL([PLUGIN_API], [test "$wasm_bind" = "yes" -o "$pybind" = "yes"])
 
 case $host in
   *mingw*)
@@ -2066,4 +2062,6 @@ echo "  CXXFLAGS        = $LTO_CXXFLAGS $DEBUG_CXXFLAGS $HARDENED_CXXFLAGS $WARN
 echo "  LDFLAGS         = $LTO_LDFLAGS $PTHREAD_LIBS $HARDENED_LDFLAGS $GPROF_LDFLAGS $CORE_LDFLAGS $LDFLAGS"
 echo "  AR              = $AR"
 echo "  ARFLAGS         = $ARFLAGS"
+echo "  wasm bind       = $wasm_bind"
+echo "  python bind     = $pybind"
 echo
