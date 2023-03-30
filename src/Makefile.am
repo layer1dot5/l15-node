@@ -601,25 +601,14 @@ crypto_libbitcoin_crypto_arm_shani_la_SOURCES = crypto/sha256_arm_shani.cpp
 
 # consensus #
 libbitcoin_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libbitcoin_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libbitcoin_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -fPIC
 libbitcoin_consensus_a_SOURCES = \
-  arith_uint256.cpp \
-  arith_uint256.h \
   consensus/amount.h \
-  consensus/merkle.cpp \
-  consensus/merkle.h \
-  consensus/params.h \
-  consensus/tx_check.cpp \
-  consensus/validation.h \
   hash.cpp \
   hash.h \
   prevector.h \
-  primitives/block.cpp \
-  primitives/block.h \
   primitives/transaction.cpp \
   primitives/transaction.h \
-  pubkey.cpp \
-  pubkey.h \
   script/bitcoinconsensus.cpp \
   script/interpreter.cpp \
   script/interpreter.h \
@@ -636,19 +625,45 @@ libbitcoin_consensus_a_SOURCES = \
   util/strencodings.h \
   version.h
 
+if !WASM_BIND
+
+libbitcoin_consensus_a_SOURCES += \
+  arith_uint256.cpp \
+  arith_uint256.h \
+  consensus/merkle.cpp \
+  consensus/merkle.h \
+  consensus/params.h \
+  consensus/tx_check.cpp \
+  consensus/validation.h \
+  primitives/block.cpp \
+  primitives/block.h \
+  pubkey.cpp \
+  pubkey.h
+
+endif
+
 # common: shared between l15noded, and l15node-qt and non-server tools
-libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BOOST_CPPFLAGS)
-libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -fPIC
 libbitcoin_common_a_SOURCES = \
+  support/lockedpool.cpp \
+  support/cleanse.cpp \
+  random.cpp \
+  randomenv.cpp \
   base58.cpp \
   bech32.cpp \
   chainparams.cpp \
   coins.cpp \
+  compressor.cpp \
+  $(BITCOIN_CORE_H)
+
+if !WASM_BIND
+
+libbitcoin_common_a_SOURCES += \
   common/bloom.cpp \
   common/init.cpp \
   common/interfaces.cpp \
   common/run_command.cpp \
-  compressor.cpp \
   core_read.cpp \
   core_write.cpp \
   deploymentinfo.cpp \
@@ -669,7 +684,6 @@ libbitcoin_common_a_SOURCES = \
   psbt.cpp \
   rpc/external_signer.cpp \
   rpc/rawtransaction_util.cpp \
-  rpc/request.cpp \
   rpc/util.cpp \
   scheduler.cpp \
   script/descriptor.cpp \
@@ -677,8 +691,9 @@ libbitcoin_common_a_SOURCES = \
   script/sign.cpp \
   script/signingprovider.cpp \
   script/standard.cpp \
-  warnings.cpp \
-  $(BITCOIN_CORE_H)
+  warnings.cpp
+
+endif
 
 if USE_LIBEVENT
 libbitcoin_common_a_CPPFLAGS += $(EVENT_CFLAGS)
@@ -688,9 +703,8 @@ endif
 
 # util #
 libbitcoin_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libbitcoin_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libbitcoin_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -fPIC
 libbitcoin_util_a_SOURCES = \
-  support/lockedpool.cpp \
   chainparamsbase.cpp \
   clientversion.cpp \
   fs.cpp \
@@ -698,6 +712,7 @@ libbitcoin_util_a_SOURCES = \
   random.cpp \
   randomenv.cpp \
   support/cleanse.cpp \
+  rpc/request.cpp \
   sync.cpp \
   util/asmap.cpp \
   util/bip32.cpp \
@@ -792,6 +807,7 @@ l15node_cli_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
+  $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_CRYPTO)
 
 l15node_cli_LDADD += $(EVENT_LIBS)
@@ -980,12 +996,18 @@ if BUILD_BITCOIN_LIBS
 lib_LTLIBRARIES += $(LIBBITCOINCONSENSUS)
 
 include_HEADERS = script/bitcoinconsensus.h
-libbitcoinconsensus_la_SOURCES = support/cleanse.cpp $(crypto_libbitcoin_crypto_base_la_SOURCES) $(libbitcoin_consensus_a_SOURCES)
+
+libbitcoinconsensus_la_SOURCES = $(libbitcoin_consensus_a_SOURCES) $(libbitcoin_common_a_SOURCES)
+if WASM_BIND
+libbitcoinconsensus_la_SOURCES += crypto/sha256.cpp crypto/sha512.cpp
+else
+libbitcoinconsensus_la_SOURCES += $(crypto_libbitcoin_crypto_base_la_SOURCES)
+endif
 
 libbitcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
 libbitcoinconsensus_la_LIBADD = $(LIBSECP256K1)
-libbitcoinconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_BITCOIN_INTERNAL
-libbitcoinconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libbitcoinconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -I$(srcdir)/$(UNIVALUE_INCLUDE_DIR_INT) -DBUILD_BITCOIN_INTERNAL
+libbitcoinconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PTHREAD_CFLAGS) $(PIE_FLAGS)
 
 endif
 #
