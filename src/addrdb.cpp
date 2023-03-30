@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2021 The Bitcoin Core developers
+// Copyright (c) 2009-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <fs.h>
 #include <hash.h>
+#include <logging.h>
 #include <logging/timer.h>
 #include <netbase.h>
 #include <netgroup.h>
@@ -34,10 +35,9 @@ bool SerializeDB(Stream& stream, const Data& data)
 {
     // Write and commit header, data
     try {
-        CHashWriter hasher(stream.GetType(), stream.GetVersion());
-        stream << Params().MessageStart() << data;
-        hasher << Params().MessageStart() << data;
-        stream << hasher.GetHash();
+        HashedSourceWriter hashwriter{stream};
+        hashwriter << Params().MessageStart() << data;
+        stream << hashwriter.GetHash();
     } catch (const std::exception& e) {
         return error("%s: Serialize or I/O error - %s", __func__, e.what());
     }
@@ -49,8 +49,7 @@ template <typename Data>
 bool SerializeFileDB(const std::string& prefix, const fs::path& path, const Data& data, int version)
 {
     // Generate random temporary filename
-    uint16_t randv = 0;
-    GetRandBytes({(unsigned char*)&randv, sizeof(randv)});
+    const uint16_t randv{GetRand<uint16_t>()};
     std::string tmpfn = strprintf("%s.%04x", prefix, randv);
 
     // open temp output file, and associate with CAutoFile
@@ -188,11 +187,11 @@ std::optional<bilingual_str> LoadAddrman(const NetGroupManager& netgroupman, con
     auto check_addrman = std::clamp<int32_t>(args.GetIntArg("-checkaddrman", DEFAULT_ADDRMAN_CONSISTENCY_CHECKS), 0, 1000000);
     addrman = std::make_unique<AddrMan>(netgroupman, /*deterministic=*/false, /*consistency_check_ratio=*/check_addrman);
 
-    int64_t nStart = GetTimeMillis();
+    const auto start{SteadyClock::now()};
     const auto path_addr{args.GetDataDirNet() / "peers.dat"};
     try {
         DeserializeFileDB(path_addr, *addrman, CLIENT_VERSION);
-        LogPrintf("Loaded %i addresses from peers.dat  %dms\n", addrman->size(), GetTimeMillis() - nStart);
+        LogPrintf("Loaded %i addresses from peers.dat  %dms\n", addrman->Size(), Ticks<std::chrono::milliseconds>(SteadyClock::now() - start));
     } catch (const DbNotFoundError&) {
         // Addrman can be in an inconsistent state after failure, reset it
         addrman = std::make_unique<AddrMan>(netgroupman, /*deterministic=*/false, /*consistency_check_ratio=*/check_addrman);

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2021 The Bitcoin Core developers
+// Copyright (c) 2015-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -75,7 +75,7 @@ static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const Uni
 {
     // Send error reply from json-rpc error object
     int nStatus = HTTP_INTERNAL_SERVER_ERROR;
-    int code = find_value(objError, "code").get_int();
+    int code = find_value(objError, "code").getInt<int>();
 
     if (code == RPC_INVALID_REQUEST)
         nStatus = HTTP_BAD_REQUEST;
@@ -160,7 +160,7 @@ static bool HTTPReq_JSONRPC(const std::any& context, HTTPRequest* req)
 
     JSONRPCRequest jreq;
     jreq.context = context;
-    jreq.peerAddr = req->GetPeer().ToString();
+    jreq.peerAddr = req->GetPeer().ToStringAddrPort();
     if (!RPCAuthorized(authHeader.second, jreq.authUser)) {
         LogPrintf("ThreadRPCServer incorrect password attempt from %s\n", jreq.peerAddr);
 

@@ -23,13 +23,14 @@ endif
 
 L15NODED_BIN=$(top_builddir)/src/$(L15NODE_DAEMON_NAME)$(EXEEXT)
 L15NODE_QT_BIN=$(top_builddir)/src/qt/$(L15NODE_GUI_NAME)$(EXEEXT)
+L15NODE_TEST_BIN=$(top_builddir)/src/test/$(L15NODE_TEST_NAME)$(EXEEXT)
 L15NODE_CLI_BIN=$(top_builddir)/src/$(L15NODE_CLI_NAME)$(EXEEXT)
 L15NODE_TX_BIN=$(top_builddir)/src/$(L15NODE_TX_NAME)$(EXEEXT)
 L15NODE_UTIL_BIN=$(top_builddir)/src/$(L15NODE_UTIL_NAME)$(EXEEXT)
 L15NODE_WALLET_BIN=$(top_builddir)/src/$(L15NODE_WALLET_TOOL_NAME)$(EXEEXT)
 L15NODE_NODE_BIN=$(top_builddir)/src/$(L15NODE_MP_NODE_NAME)$(EXEEXT)
 L15NODE_GUI_BIN=$(top_builddir)/src/$(L15NODE_MP_GUI_NAME)$(EXEEXT)
-BITCOIN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win64-setup$(EXEEXT)
+WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win64-setup$(EXEEXT)
 
 empty :=
 space := $(empty) $(empty)
@@ -74,10 +75,11 @@ dist-hook:
 	-$(GIT) archive --format=tar HEAD -- src/clientversion.cpp | $(AMTAR) -C $(top_distdir) -xf -
 
 if TARGET_WINDOWS
-$(BITCOIN_WIN_INSTALLER): all-recursive
+$(WIN_INSTALLER): all-recursive
 	$(MKDIR_P) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(L15NODED_BIN) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(L15NODE_QT_BIN) $(top_builddir)/release
+	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(L15NODE_TEST_BIN) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(L15NODE_CLI_BIN) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(L15NODE_TX_BIN) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(L15NODE_WALLET_BIN) $(top_builddir)/release
@@ -86,7 +88,7 @@ $(BITCOIN_WIN_INSTALLER): all-recursive
 	  echo error: could not build $@
 	@echo built $@
 
-deploy: $(BITCOIN_WIN_INSTALLER)
+deploy: $(WIN_INSTALLER)
 endif
 
 if TARGET_DARWIN
@@ -174,7 +176,6 @@ LCOV_FILTER_PATTERN = \
 	-p "src/leveldb/" \
 	-p "src/crc32c/" \
 	-p "src/bench/" \
-	-p "src/univalue" \
 	-p "src/crypto/ctaes" \
 	-p "src/minisketch" \
 	-p "src/secp256k1" \
@@ -312,7 +313,7 @@ EXTRA_DIST += \
     test/util/data/txcreatesignv2.hex \
     test/util/rpcauth-test.py
 
-CLEANFILES = $(OSX_DMG) $(BITCOIN_WIN_INSTALLER)
+CLEANFILES = $(OSX_DMG) $(WIN_INSTALLER)
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-man
 
