@@ -689,19 +689,19 @@ AC_ARG_WITH([daemon],
   [build_l15noded=$withval],
   [build_l15noded=yes])
 
-AC_ARG_ENABLE([wasm-bind],
-              [AS_HELP_STRING([--enable-wasm-bind], [Enable binding for WebAssembly (disabled by default)])],
-              [wasm_bind=$enableval],
-              [wasm_bind=no])
+AC_ARG_ENABLE([wasm-module],
+              [AS_HELP_STRING([--enable-wasm-module], [Enable binding for WebAssembly (disabled by default)])],
+              [wasm_module=$enableval],
+              [wasm_module=no])
 
-AC_ARG_ENABLE([pybind],
-              [AS_HELP_STRING([--enable-pybind], [Enable binding for Python using SWIG (disabled by default)])],
-              [pybind=$enableval],
-              [pybind=no])
+AC_ARG_ENABLE([python-module],
+              [AS_HELP_STRING([--enable-python-module], [Enable binding for Python using SWIG (disabled by default)])],
+              [python_module=$enableval],
+              [python_module=no])
 
-AM_CONDITIONAL([WASM_BIND], [test "$wasm_bind" = "yes"])
-AM_CONDITIONAL([PYTHON_BIND], [test "$pybind" = "yes"])
-AM_CONDITIONAL([PLUGIN_API], [test "$wasm_bind" = "yes" -o "$pybind" = "yes"])
+AM_CONDITIONAL([WASM_MODULE], [test "$wasm_module" = "yes"])
+AM_CONDITIONAL([PYTHON_MODULE], [test "$python_module" = "yes"])
+AM_CONDITIONAL([PLUGIN_API], [test "$wasm_module" = "yes" -o "$python_module" = "yes"])
 
 case $host in
   *mingw*)
@@ -916,7 +916,7 @@ dnl Check for endianness
 AC_C_BIGENDIAN
 
 dnl Check for pthread compile/link requirements
-if test "$wasm_bind" != "yes"; then
+if test "$wasm_module" != "yes"; then
 AX_PTHREAD
 fi
 
@@ -2062,6 +2062,6 @@ echo "  CXXFLAGS        = $LTO_CXXFLAGS $DEBUG_CXXFLAGS $HARDENED_CXXFLAGS $WARN
 echo "  LDFLAGS         = $LTO_LDFLAGS $PTHREAD_LIBS $HARDENED_LDFLAGS $GPROF_LDFLAGS $CORE_LDFLAGS $LDFLAGS"
 echo "  AR              = $AR"
 echo "  ARFLAGS         = $ARFLAGS"
-echo "  wasm bind       = $wasm_bind"
-echo "  python bind     = $pybind"
+echo "  wasm module     = $wasm_module"
+echo "  python module   = $python_module"
 echo
