@@ -336,16 +336,12 @@ AC_ARG_ENABLE([lto],
     [enable_lto=$enableval],
     [enable_lto=no])
 
-AC_ARG_ENABLE([wasm-bind],
-              [AS_HELP_STRING([--enable-wasm-bind], [Enable plugin API binding for WebAssembly (disabled by default)])],
-              [
-                if test "$enableval" = "yes"; then
-                    wasm_bind=yes
-                fi
-              ],
-              [wasm_bind=no])
+AC_ARG_ENABLE([wasm-module],
+              [AS_HELP_STRING([--enable-wasm-module], [Enable plugin API binding for WebAssembly (disabled by default)])],
+              [],
+              [enable_wasm_module=no])
 
-AM_CONDITIONAL([WASM_BIND], [test "$wasm_bind" = "yes"])
+AM_CONDITIONAL([WASM_BIND], [test "$enable_wasm_module" = "yes"])
 
 
 AC_LANG_PUSH([C++])
@@ -701,11 +697,6 @@ AC_ARG_WITH([daemon],
   [build_l15noded=$withval],
   [build_l15noded=yes])
 
-AC_ARG_ENABLE([wasm-bind],
-              [AS_HELP_STRING([--enable-wasm-bind], [Enable binding for WebAssembly (disabled by default)])],
-              [wasm_bind=$enableval],
-              [wasm_bind=no])
-
 
 case $host in
   *mingw*)
@@ -920,7 +911,7 @@ dnl Check for endianness
 AC_C_BIGENDIAN
 
 dnl Check for pthread compile/link requirements
-if test "$wasm_bind" != "yes"; then
+if test "$enable_wasm_module" != "yes"; then
 AX_PTHREAD
 fi
 
