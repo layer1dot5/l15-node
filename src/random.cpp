@@ -73,7 +73,7 @@ int64_t GetTimeMicros()
 
 [[noreturn]] static void RandFailure()
 {
-#ifndef __EMSCRIPTEN__
+#ifndef PLUGIN_API
     LogPrintf("Failed to read randomness, aborting\n");
 #endif
     std::abort();
@@ -130,12 +130,14 @@ static void ReportHardwareRand()
 {
     // This must be done in a separate function, as InitHardwareRand() may be indirectly called
     // from global constructors, before logging is initialized.
+#ifndef PLUGIN_API
     if (g_rdseed_supported) {
         LogPrintf("Using RdSeed as an additional entropy source\n");
     }
     if (g_rdrand_supported) {
         LogPrintf("Using RdRand as an additional entropy source\n");
     }
+#endif
 }
 
 /** Read 64 bits of entropy using rdrand.
@@ -550,7 +552,7 @@ static void SeedPeriodic(CSHA512& hasher, RNGState& rng) noexcept
     auto old_size = hasher.Size();
     RandAddDynamicEnv(hasher);
 
-#ifndef __EMSCRIPTEN__
+#ifndef PLUGIN_API
     LogPrint(BCLog::RAND, "Feeding %i bytes of dynamic environment data into RNG\n", hasher.Size() - old_size);
 #endif
 
@@ -572,7 +574,7 @@ static void SeedStartup(CSHA512& hasher, RNGState& rng) noexcept
 
     // Static environment data
     RandAddStaticEnv(hasher);
-#ifndef __EMSCRIPTEN__
+#ifndef PLUGIN_API
     LogPrint(BCLog::RAND, "Feeding %i bytes of environment data into RNG\n", hasher.Size() - old_size);
 #endif
 

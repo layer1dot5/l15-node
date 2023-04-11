@@ -147,6 +147,8 @@ std::string EncodeHexTx(const CTransaction& tx, const int serializeFlags)
     return HexStr(ssTx);
 }
 
+#ifndef PLUGIN_API
+
 void ScriptToUniv(const CScript& script, UniValue& out, bool include_hex, bool include_address, const SigningProvider* provider)
 {
     CTxDestination address;
@@ -267,3 +269,5 @@ void TxToUniv(const CTransaction& tx, const uint256& block_hash, UniValue& entry
         entry.pushKV("hex", EncodeHexTx(tx, serialize_flags)); // The hex-encoded transaction. Used the name "hex" to be consistent with the verbose output of "getrawtransaction".
     }
 }
+
+#endif

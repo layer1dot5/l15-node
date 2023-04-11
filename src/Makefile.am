@@ -604,6 +604,7 @@ libbitcoin_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -fPIC
 libbitcoin_consensus_a_SOURCES = \
   consensus/amount.h \
+  core_write.cpp \
   hash.cpp \
   hash.h \
   prevector.h \
@@ -623,9 +624,11 @@ libbitcoin_consensus_a_SOURCES = \
   uint256.h \
   util/strencodings.cpp \
   util/strencodings.h \
-  version.h
+  version.h \
+  pubkey.cpp \
+  pubkey.h
 
-if !WASM_BIND
+if !PLUGIN_API
 
 libbitcoin_consensus_a_SOURCES += \
   arith_uint256.cpp \
@@ -636,10 +639,7 @@ libbitcoin_consensus_a_SOURCES += \
   consensus/tx_check.cpp \
   consensus/validation.h \
   primitives/block.cpp \
-  primitives/block.h \
-  pubkey.cpp \
-  pubkey.h
-
+  primitives/block.h
 endif
 
 # common: shared between l15noded, and l15node-qt and non-server tools
@@ -657,7 +657,7 @@ libbitcoin_common_a_SOURCES = \
   compressor.cpp \
   $(BITCOIN_CORE_H)
 
-if !WASM_BIND
+if !PLUGIN_API
 
 libbitcoin_common_a_SOURCES += \
   common/bloom.cpp \
@@ -998,8 +998,15 @@ lib_LTLIBRARIES += $(LIBBITCOINCONSENSUS)
 include_HEADERS = script/bitcoinconsensus.h
 
 libbitcoinconsensus_la_SOURCES = $(libbitcoin_consensus_a_SOURCES) $(libbitcoin_common_a_SOURCES)
-if WASM_BIND
-libbitcoinconsensus_la_SOURCES += crypto/sha256.cpp crypto/sha512.cpp
+if PLUGIN_API
+libbitcoinconsensus_la_SOURCES += \
+ crypto/chacha_poly_aead.cpp \
+ crypto/chacha20.cpp \
+ crypto/hmac_sha512.cpp \
+ crypto/ripemd160.cpp \
+ crypto/sha1.cpp \
+ crypto/sha256.cpp \
+ crypto/sha512.cpp
 else
 libbitcoinconsensus_la_SOURCES += $(crypto_libbitcoin_crypto_base_la_SOURCES)
 endif
@@ -1008,6 +1015,10 @@ libbitcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
 libbitcoinconsensus_la_LIBADD = $(LIBSECP256K1)
 libbitcoinconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -I$(srcdir)/$(UNIVALUE_INCLUDE_DIR_INT) -DBUILD_BITCOIN_INTERNAL
 libbitcoinconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PTHREAD_CFLAGS) $(PIE_FLAGS)
+
+if PLUGIN_API
+libbitcoinconsensus_la_CPPFLAGS += -DPLUGIN_API
+endif
 
 endif
 #

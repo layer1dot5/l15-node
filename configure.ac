@@ -341,8 +341,19 @@ AC_ARG_ENABLE([wasm-module],
               [],
               [enable_wasm_module=no])
 
-AM_CONDITIONAL([WASM_BIND], [test "$enable_wasm_module" = "yes"])
+AC_ARG_ENABLE([python-module],
+              [AS_HELP_STRING([--enable-python-module], [Enable binding for Python using SWIG (disabled by default)])],
+              [],
+              [enable_python_module=no])
 
+AC_ARG_ENABLE([plugin-api],
+              [AS_HELP_STRING([--enable-plugin-api], [Enable binding for Python using SWIG (disabled by default)])],
+              [],
+              [enable_plugin_api=no])
+
+AM_CONDITIONAL([WASM_BIND], [test "$enable_wasm_module" = "yes"])
+AM_CONDITIONAL([PYTHON_BIND], [test "$enable_python_module" = "yes"])
+AM_CONDITIONAL([PLUGIN_API], [test "$enable_plugin_api" = "yes"])
 
 AC_LANG_PUSH([C++])
 
@@ -2057,4 +2068,7 @@ echo "  CXXFLAGS        = $LTO_CXXFLAGS $DEBUG_CXXFLAGS $HARDENED_CXXFLAGS $WARN
 echo "  LDFLAGS         = $LTO_LDFLAGS $PTHREAD_LIBS $HARDENED_LDFLAGS $GPROF_LDFLAGS $CORE_LDFLAGS $LDFLAGS"
 echo "  AR              = $AR"
 echo "  ARFLAGS         = $ARFLAGS"
+echo "  wasm module     = $enable_wasm_module"
+echo "  python bind     = $enable_python_module"
+echo "  plugin api     =  $enable_plugin_api"
 echo
