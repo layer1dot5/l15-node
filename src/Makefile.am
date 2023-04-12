@@ -604,7 +604,6 @@ libbitcoin_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -fPIC
 libbitcoin_consensus_a_SOURCES = \
   consensus/amount.h \
-  core_write.cpp \
   hash.cpp \
   hash.h \
   prevector.h \
@@ -654,6 +653,8 @@ libbitcoin_common_a_SOURCES = \
   bech32.cpp \
   chainparams.cpp \
   coins.cpp \
+  core_read.cpp \
+  core_write.cpp \
   compressor.cpp \
   $(BITCOIN_CORE_H)
 
@@ -664,8 +665,6 @@ libbitcoin_common_a_SOURCES += \
   common/init.cpp \
   common/interfaces.cpp \
   common/run_command.cpp \
-  core_read.cpp \
-  core_write.cpp \
   deploymentinfo.cpp \
   external_signer.cpp \
   init/common.cpp \

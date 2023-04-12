@@ -336,20 +336,30 @@ AC_ARG_ENABLE([lto],
     [enable_lto=$enableval],
     [enable_lto=no])
 
+default_plugin_api=no
+
 AC_ARG_ENABLE([wasm-module],
               [AS_HELP_STRING([--enable-wasm-module], [Enable plugin API binding for WebAssembly (disabled by default)])],
-              [],
+              [
+                if test $enableval != no; then
+                  default_plugin_api=yes
+                fi
+              ],
               [enable_wasm_module=no])
 
 AC_ARG_ENABLE([python-module],
               [AS_HELP_STRING([--enable-python-module], [Enable binding for Python using SWIG (disabled by default)])],
-              [],
+              [
+                if test $enableval != no; then
+                  default_plugin_api=yes
+                fi
+              ],
               [enable_python_module=no])
 
 AC_ARG_ENABLE([plugin-api],
               [AS_HELP_STRING([--enable-plugin-api], [Enable binding for Python using SWIG (disabled by default)])],
               [],
-              [enable_plugin_api=no])
+              [enable_plugin_api=$default_plugin_api])
 
 AM_CONDITIONAL([WASM_BIND], [test "$enable_wasm_module" = "yes"])
 AM_CONDITIONAL([PYTHON_BIND], [test "$enable_python_module" = "yes"])
