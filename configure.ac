@@ -692,7 +692,7 @@ AC_ARG_ENABLE([util-util],
   [AS_HELP_STRING([--enable-util-util],
   [build l15node-util])],
   [build_util=$enableval],
-  [build_util=$build__utils])
+  [build_util=$build_utils])
 
 AC_ARG_ENABLE([experimental-util-chainstate],
   [AS_HELP_STRING([--enable-experimental-util-chainstate],
