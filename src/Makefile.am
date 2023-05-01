@@ -656,6 +656,7 @@ libbitcoin_common_a_SOURCES = \
   core_read.cpp \
   core_write.cpp \
   compressor.cpp \
+  policy/feerate.cpp \
   $(BITCOIN_CORE_H)
 
 if !PLUGIN_API
@@ -677,7 +678,6 @@ libbitcoin_common_a_SOURCES += \
   netbase.cpp \
   net_permissions.cpp \
   outputtype.cpp \
-  policy/feerate.cpp \
   policy/policy.cpp \
   protocol.cpp \
   psbt.cpp \
